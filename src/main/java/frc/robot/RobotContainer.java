@@ -29,11 +29,11 @@ public class RobotContainer {
 
   private ChassisSubsystem chassis; 
 
-  private KeepVelocityPID keepVelocityPID;
+  private Command keepVelocityPID;
   
   public RobotContainer() {
     chassis = new ChassisSubsystem();
-    keepVelocityPID = new KeepVelocityPID(chassis);
+    keepVelocityPID = new KeepVelocityPID(chassis).withTimeout(3);
     // Configure the trigger bindings
     configureBindings();
   }
@@ -63,6 +63,6 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     // An example command will be run in autonomous
-    return keepVelocityPID.withTimeout(3);
+    return keepVelocityPID;
   }
 }
