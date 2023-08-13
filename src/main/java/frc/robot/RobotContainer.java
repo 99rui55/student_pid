@@ -5,6 +5,8 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import frc.robot.commands.Drive;
 import frc.robot.commands.VelocityPIDCommand;
 import frc.robot.subsystems.Chassis;
 
@@ -15,10 +17,17 @@ public class RobotContainer {
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     chassis = new Chassis(this);
-    configureBindings();
+    configurBindings();
+   
   }
 
-  private void configureBindings() {
+  
+  private CommandXboxController  controller = new CommandXboxController(0);
+
+  public void configurBindings() {
+    controller.b().onTrue(new VelocityPIDCommand(chassis));
+    controller.a().onTrue(new Drive(chassis));
+    
   }
 
   /**
@@ -27,6 +36,7 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
-      return new VelocityPIDCommand(chassis).withTimeout(3);
+      // return new VelocityPIDCommand(chassis).withTimeout(3);
+      return null;
   }
 }
