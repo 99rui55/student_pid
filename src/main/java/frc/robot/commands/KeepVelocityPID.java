@@ -33,7 +33,6 @@ public class KeepVelocityPID  extends CommandBase{
     public void initialize() {
         counts = 0;
         chassis.setVelocity(velocity, velocity);
-        
         chassis.setPID(VelocityKP, VelocityKI, VelocityKD);
     }
     
