@@ -9,7 +9,6 @@ import frc.robot.subsystems.ChassisSubsystem;
 public class KeepVelocityPID  extends CommandBase{
 
     private ChassisSubsystem chassis;
-    private int counts;
     private double velocity = 0;
     private double returnVelocity0(){
         return velocity;
@@ -31,15 +30,10 @@ public class KeepVelocityPID  extends CommandBase{
 
     @Override
     public void initialize() {
-        counts = 0;
         chassis.setVelocity(velocity, velocity);
-        chassis.setPID(VelocityKP, VelocityKI, VelocityKD);
+        System.out.println("Velocity: " + velocity);
     }
     
-    @Override
-    public boolean isFinished() {
-        return counts++ > 150;
-    }
     @Override
     public void end(boolean interrupted) {
         chassis.setPower(0, 0);

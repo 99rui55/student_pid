@@ -31,7 +31,7 @@ public final class Constants {
     public static final int fixedAngleErrorRange = 3;
     
     // Velocity PID
-    public static final double VelocityKP = 512/5300;
+    public static final double VelocityKP = 100.0/5300.0;
     public static final double VelocityKI = VelocityKP/10;
     public static final double VelocityKD = 0;
 

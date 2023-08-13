@@ -24,6 +24,7 @@ public class ChassisSubsystem extends SubsystemBase{
         leftBackMotor.setInverted(LeftInverted);
         leftBackMotor.follow(leftFrontMotor);
         rightBackMotor.follow(rightFrontMotor);
+        setPID(VelocityKP, VelocityKI, VelocityKD);
     }
 
     public void setPower(double left, double right){
@@ -32,6 +33,8 @@ public class ChassisSubsystem extends SubsystemBase{
     }
 
     public void setVelocity(double left, double right){
+        leftFrontMotor.setIntegralAccumulator(0);
+        rightFrontMotor.setIntegralAccumulator(0);
         rightFrontMotor.set(TalonFXControlMode.Velocity, (right * PulsePerMeter / 10));
         leftFrontMotor.set(TalonFXControlMode.Velocity, left * PulsePerMeter / 10);
     }
@@ -45,7 +48,6 @@ public class ChassisSubsystem extends SubsystemBase{
     public void setPID(double kp, double ki, double kd) {
         setPID(leftFrontMotor, kp, ki, kd);
         setPID(rightFrontMotor, kp, ki, kd);
-        leftFrontMotor.config_kI(0, 0);
-        rightFrontMotor.config_kI(0, 0);
+        
     }
 }

@@ -63,6 +63,6 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     // An example command will be run in autonomous
-    return keepVelocityPID;
+    return keepVelocityPID.withTimeout(3);
   }
 }
