@@ -4,47 +4,35 @@
 
 package frc.robot.commands;
 
-import com.ctre.phoenix.motorcontrol.can.TalonFXPIDSetConfiguration;
-
-import edu.wpi.first.util.sendable.SendableBuilder;
+import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Chassis;
 
-public class PIDTask extends CommandBase {
-  public Chassis chassis;
-  public double KP;
-  public double KI;
-  public double KD;
-  
-  /** Creates a new OdiWantPID. */
-  public PIDTask(Chassis chassis, double KP, double KI, double KD) {
+public class Movement extends CommandBase {
+  Chassis chassis;
+  XboxController controller;
+  /** Creates a new Movement. */
+  public Movement(Chassis chassis) {
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(chassis);
     this.chassis = chassis;
-
-    this.KP = KP;
-    this.KI = KI;
-    this.KD = KD;
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    chassis.invert();
-    chassis.setPID(KP, KI, KD);
-    // chassis.setVelocity();
+  //   double leftY = 
+  //   double rightY = 
+  //   double leftX = controller.getLeftX();
+  //   double rightX = controller.getRightX();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
-  public void execute() {}
-
-  public double wantedSpeed(){return 5;}
-  public double speed(double speed){return speed;}
-  public void initSendeble(SendableBuilder builder) {
-    builder.addDoubleProperty("Wanted Speed", this::wantedSpeed, this::speed);
+  public void execute() {
+    chassis.setVelocity(controller.getRightY()*0.5, controller.getRightY()*0.5);
   }
-  
+
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {}
