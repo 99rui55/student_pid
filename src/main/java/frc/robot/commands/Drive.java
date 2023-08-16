@@ -20,12 +20,7 @@ public class Drive extends CommandBase {
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {
-  //   double leftY = 
-  //   double rightY = 
-  //   double leftX = controller.getLeftX();
-  //   double rightX = controller.getRightX();
-  }
+  public void initialize() {}
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
