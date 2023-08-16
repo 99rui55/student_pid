@@ -30,7 +30,7 @@ public class DriveSpeed extends CommandBase implements Sendable {
   @Override
   public void initialize() {
     cycles = 0;
-    double v = SmartDashboard.getNumber("Auto Velocity", 1);
+    double v = SmartDashboard.getNumber("wonted Velocity", 1.5);
     chassis.setvel(v, v);
     
  

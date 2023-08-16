@@ -37,13 +37,12 @@ public double present(){
   return RFMotor.getSelectedSensorPosition();
 }
 public void setPower(double left, double right){
-  RFMotor.set(ControlMode.PercentOutput, right);
   DRMotor.set(ControlMode.PercentOutput, right);
   DLMotor.set(ControlMode.PercentOutput, left);
-  LFMotor.set(ControlMode.PercentOutput, left);
   
 } 
 public Chassis() {
+  super();
   RFMotor = new TalonFX(Constants.uprightmotoridID);
   DRMotor = new TalonFX(Constants.downrightmotoridID);
   DLMotor = new TalonFX(Constants.downleftmotoridID);
@@ -61,7 +60,7 @@ public Chassis() {
   DLMotor.config_kI(0, Constants.KI);
   DRMotor.config_kD(0, Constants.KD);
   DLMotor.config_kD(0, Constants.KD);
-  SmartDashboard.putNumber("Auto Velocity",1);
+  SmartDashboard.putData("Chassis", this);
 }
   @Override
   public void periodic() {
@@ -81,11 +80,11 @@ public Chassis() {
 
 
   public void setvel(double left, double right){
+    DRMotor.setIntegralAccumulator(0);
+    DLMotor.setIntegralAccumulator(0);
     DRMotor.set(ControlMode.Velocity, right*Constants.PulsePerMeter/10);
     DLMotor.set(ControlMode.Velocity, left*Constants.PulsePerMeter/10);
-    SmartDashboard.putNumber("Set Velocity", left);
-
-
+    System.out.println(" Set Velocitt " + left + "   " + right);
   }
   @Override
   public void initSendable(SendableBuilder builder) {
@@ -93,7 +92,7 @@ public Chassis() {
       super.initSendable(builder);
       builder.addDoubleProperty("L Velocity", this::getLeftVelocity, null);
       builder.addDoubleProperty("R Velocity", this::getRightVelocity, null);
-
+      System.out.println(" Init Sendable Done");
   }
 }
 
