@@ -14,8 +14,11 @@ public class Chassis extends SubsystemBase {
     TalonFX right;
 
     public Chassis() {
+        super();
         left = initMotors(ChassisConstants.LeftFrontMotor, ChassisConstants.LeftBackMotor, ChassisConstants.LeftInverted);
         right = initMotors(ChassisConstants.RightFrontMotor, ChassisConstants.RightBackMotor, ChassisConstants.RightInverted);
+    
+        SmartDashboard.putData("Chassis",this);
     }
 
     // Init motors for one side
