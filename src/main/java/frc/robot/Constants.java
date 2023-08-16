@@ -19,9 +19,9 @@ public final class Constants {
   public static final int upleftmotoridID = 3;
   public static final int gyroID = 14;
   public static final double PulsePerMeter = 51330.602118456952386562826360143;
-  public static final double KP = 0.5;
+  public static final double KP = 0.05;
   public static final double KD = 0;
-  public static final double KI = 0.05;
+  public static final double KI = 0.005;
   public static class OperatorConstants {
     public static final int kDriverControllerPort = 0;
   }

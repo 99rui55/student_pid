@@ -14,9 +14,7 @@ import frc.robot.Constants;
 import frc.robot.subsystems.Chassis;
 
 public class DriveSpeed extends CommandBase implements Sendable {
-  double v;
   Chassis chassis;  int cycles = 0;
-  public double getVelocity(){return v;}
   /** Creates a new DriveSpeed. */
   public DriveSpeed(Chassis chassis) {
     this.chassis = chassis;
@@ -33,15 +31,14 @@ public class DriveSpeed extends CommandBase implements Sendable {
   public void initialize() {
     cycles = 0;
     double v = SmartDashboard.getNumber("Auto Velocity", 1);
+    chassis.setvel(v, v);
     
  
 }
 @Override
 public boolean isFinished() {
-    return cycles++ > 150;
+  cycles++;
+    return cycles > 150;
 }
 
-public void Sendable(SendableBuilder builder){
-  builder.addDoubleProperty("Velocity", this::getVelocity, null);
-}
 }
