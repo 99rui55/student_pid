@@ -8,40 +8,47 @@ import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants;
+import frc.robot.Constants.OperatorConstants;
 import frc.robot.subsystems.*;
 public class sec3vel extends CommandBase {
   /** Creates a new sec3vel. */
   Chasis chasis;
   double speed;
+  double reqSpeed = 0.5;
   int time = 0;
   public sec3vel(Chasis chasis) {
     // Use addRequirements() here to declare subsystem dependencies.
+    super();
     this.chasis = chasis;
     addRequirements(this.chasis);
     SmartDashboard.putData(this);
   }
 
+  public double getReqSpeed()
+  {
+    return this.reqSpeed;
+  }
+
   @Override
   public void initSendable(SendableBuilder builder)
   {
-    builder.addDoubleProperty("Meters per second", null, this::setSpeed);
+    builder.addDoubleProperty("Meters per second", this::getReqSpeed, this::setReqSpeed);
     builder.addDoubleProperty("Current mPs", this::getSpeed, null);
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    chasis.setLeftV(0.2);
-    chasis.setRightV(0.2);
+    chasis.setV(reqSpeed);
   }
 
-  public void setSpeed(double speed)
+  public void setReqSpeed(double reqSpeed)
   {
-    this.speed = speed;
+    this.reqSpeed = reqSpeed;
   }
 
   public double getSpeed(){
-    return (chasis.getCountsV(0) * 10) / Constants.OperatorConstants.cPerM;
+    return (chasis.getCountsV(OperatorConstants.leftSide) * 10) / Constants.OperatorConstants.cPerM;
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -53,8 +60,7 @@ public class sec3vel extends CommandBase {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    chasis.setLeftV(0);
-    chasis.setRightV(0);
+    chasis.shut();
   }
 
   // Returns true when the command should end.

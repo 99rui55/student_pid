@@ -12,6 +12,8 @@ import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import static frc.robot.Constants.OperatorConstants;
+
 import com.ctre.phoenix.sensors.PigeonIMU;
 
 
@@ -21,24 +23,41 @@ public class Chasis extends SubsystemBase {
   PigeonIMU pigeon;
 
   public Chasis(int... id) {
+    super();
       motors = new TalonFX[id.length];
       for(int i = 0; i < motors.length; i++)
       {
         motors[i] = new TalonFX(id[i]);
-        motors[i].config_kP(0, 0.07);
-        motors[i].config_kI(0, 0.05);
-        motors[i].config_kD(0, 0);
+        motors[i].config_kP(0, Constants.OperatorConstants.kP);
+        motors[i].config_kI(0, Constants.OperatorConstants.kI);
+        motors[i].config_kD(0, Constants.OperatorConstants.kD);
       }
+      
+      //invert the first left motor
+      motors[Constants.OperatorConstants.leftSide].setInverted(false);
 
-      for(int i = 0; i < motors.length/2;i++)
+      //for all other left motors
+      for(int i = Constants.OperatorConstants.leftSide + 1; i < Constants.OperatorConstants.rightSide;i++)
       {
+        //invert
         motors[i].setInverted(false);
-      }
-      for(int i = motors.length/2; i < motors.length;i++)
-      {
-        motors[i].setInverted(true);
+        //follow first motor
+        motors[i].follow(motors[Constants.OperatorConstants.leftSide]);
       }
 
+      //invert first right motor
+      motors[Constants.OperatorConstants.rightSide].setInverted(true);
+      //for all other right motors
+      for(int i = (Constants.OperatorConstants.rightSide) + 1; i < motors.length;i++)
+      {
+        //invert
+        motors[i].setInverted(true);
+        //follow first motor
+        motors[i].follow(motors[Constants.OperatorConstants.rightSide]);
+      }
+
+      //reset the I in the PID
+      
 
       pigeon = new PigeonIMU(14);
   }
@@ -53,6 +72,13 @@ public class Chasis extends SubsystemBase {
       return pigeon.getFusedHeading();
   }
 
+  public void shut()
+  {
+    motors[Constants.OperatorConstants.leftSide].set(ControlMode.PercentOutput,0);
+    motors[Constants.OperatorConstants.rightSide].set(ControlMode.PercentOutput,0);
+
+  }
+
   public double[] deg()
   {
     double[] ypr = new double[3];
@@ -62,18 +88,18 @@ public class Chasis extends SubsystemBase {
 
   public void setLeftP(double p)
   {
-      for(int i = 0; i < motors.length/2; i++)
-      {
-          motors[i].set(ControlMode.PercentOutput, p);
-      }
+      motors[Constants.OperatorConstants.leftSide].set(ControlMode.PercentOutput,p);
   }
 
   public void setRightP(double p)
   {
-      for(int i = motors.length/2; i < motors.length; i++)
-      {
-          motors[i].set(ControlMode.PercentOutput, p);
-      }
+    motors[Constants.OperatorConstants.rightSide].set(ControlMode.PercentOutput,p);
+  }
+
+  public void setP(double p)
+  {
+    motors[Constants.OperatorConstants.leftSide].set(ControlMode.PercentOutput,p);
+    motors[Constants.OperatorConstants.rightSide].set(ControlMode.PercentOutput,p);
   }
 
   public double getCountsV(int i)
@@ -83,18 +109,23 @@ public class Chasis extends SubsystemBase {
 
   public void setRightV(double mPs)
   {
-    for(int i = motors.length/2; i < motors.length; i++)
-      {
-          motors[i].set(ControlMode.Velocity, (mPs * Constants.OperatorConstants.cPerM) / 10);
-      }
+    motors[Constants.OperatorConstants.rightSide].set(ControlMode.Velocity, (mPs * Constants.OperatorConstants.cPerM) / 10);
   }
 
   public void setLeftV(double mPs)
   {
-      for(int i = 0; i < motors.length/2; i++)
-      {
-          motors[i].set(ControlMode.Velocity, (mPs * Constants.OperatorConstants.cPerM) / 10);
-      }
+    TalonFX m = motors[Constants.OperatorConstants.leftSide];
+    m.setIntegralAccumulator(0);
+    m.set(ControlMode.Velocity, (mPs * Constants.OperatorConstants.cPerM) / 10);
+  }
+
+  public void setV(double mPs)
+  {
+    motors[Constants.OperatorConstants.leftSide].setIntegralAccumulator(0);
+    motors[Constants.OperatorConstants.rightSide].setIntegralAccumulator(0);
+
+    motors[Constants.OperatorConstants.leftSide].set(ControlMode.Velocity, (mPs * Constants.OperatorConstants.cPerM) / 10);
+    motors[Constants.OperatorConstants.rightSide].set(ControlMode.Velocity, (mPs * Constants.OperatorConstants.cPerM) / 10);
   }
 
   public double getCounts(int i)
@@ -104,12 +135,12 @@ public class Chasis extends SubsystemBase {
 
   public double getCountsL()
   {
-    return motors[motors.length/2-motors.length/4].getSelectedSensorPosition();
+    return motors[Constants.OperatorConstants.leftSide].getSelectedSensorPosition();
   }
 
   public double getCountsR()
   {
-    return motors[motors.length/2+motors.length/4].getSelectedSensorPosition();
+    return motors[Constants.OperatorConstants.rightSide].getSelectedSensorPosition();
   }
 
   @Override

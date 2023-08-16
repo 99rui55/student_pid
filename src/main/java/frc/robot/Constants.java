@@ -16,6 +16,14 @@ public final class Constants {
   public static class OperatorConstants {
     public static final int kDriverControllerPort = 0;
     public static final double cPerM = 161684.21;
+    public static final double kP = 0.01;
+    //public static final double kI = 0.0015;
+    //public static final double kI = 0.0008;
+    public static final double kI = 0.00065;
+    //public static final double kD = 0;
+    public static final double kD = 0.0002;
 
+    public static final int leftSide = 0;
+    public static final int rightSide = 2;
   }
 }
