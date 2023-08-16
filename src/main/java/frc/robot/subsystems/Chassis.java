@@ -17,8 +17,9 @@ public class Chassis extends SubsystemBase {
 
     public Chassis(RobotContainer container) {
         this.container = container;
-        left = initMotors(FrontLeftMotor, LeftBackMotor, LeftInverted);
-        right = initMotors(FrontRightMotor, BackRightMotor, RightInverted);
+        left = initMotors(FrontLeftMotor, LeftBackMotor, LeftInvert);
+        right = initMotors(FrontRightMotor, BackRightMotor, RightInvert);
+        setPID();
     }
 
     // Init motors for one side
@@ -64,8 +65,8 @@ public class Chassis extends SubsystemBase {
     }
 
     public void setPID() { // read PID from network table
-        setPID(SmartDashboard.getNumber("Velocity KP", kP),
-                SmartDashboard.getNumber("Velocity KI", kI),
+    setPID(SmartDashboard.getNumber("Velocity KP", kP),
+    SmartDashboard.getNumber("Velocity KI", kI),
                 SmartDashboard.getNumber("Velocity KD", kD));
     }
 
@@ -92,16 +93,9 @@ public class Chassis extends SubsystemBase {
     @Override
     public void initSendable(SendableBuilder builder) {
         super.initSendable(builder);
-        builder.addDoubleProperty("Left Distance", this::getLeftDistance, null);
-        builder.addDoubleProperty("Right Distance", this::getRightDistance, null);
-        builder.addDoubleProperty("Distance", this::getDistance, null);
         builder.addDoubleProperty("Left Velocity", this::getLeftVelocity, null);
         builder.addDoubleProperty("Right Velocity", this::getRightVelocity, null);
-        builder.addDoubleProperty("Velocity", this::getLeftVelocity, null);
-        SmartDashboard.putNumber("Velocity KP", kP);
-        SmartDashboard.putNumber("Velocity KD", kD);
-        SmartDashboard.putNumber("Velocity KI", kI);
-        addNTBox("Wanted Velocity", 1);
+        builder.addDoubleProperty("Set Velocity", null, null);
     }
 
 

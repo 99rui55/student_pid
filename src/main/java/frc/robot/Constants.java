@@ -16,17 +16,20 @@ import java.lang.Math;
 public final class Constants {
   public static class ChassisConstants {
     public static final int FrontLeftMotor = 1;
-    public static final int LeftBackMotor = 1;
-    public static final int FrontRightMotor = 1;
-    public static final int BackRightMotor = 1;
-    public static final boolean LeftInverted = true;
-    public static final boolean RightInverted = false;
+    public static final int LeftBackMotor = 2;
+    public static final int FrontRightMotor = 3;
+    public static final int BackRightMotor = 3;
+    public static final boolean LeftInvert = true;
+    public static final boolean RightInvert = false;
 
+
+    public static final double WheelCirc = 6 * 0.0254 * Math.PI;
+    public static final double GearRatio = 12;
     public static final double PulsePerRotation = 2048;
-    public static final double PulsePerMeter = 51339;
+    public static final double PulsePerMeter = (1/WheelCirc)*GearRatio*PulsePerRotation;
 
-    public static final double kP = 0.3;
-    public static final double kI = 0.03;
+    public static final double kP = 0.03;
+    public static final double kI = 0.003;
     public static final double kD = 0;
 
   }
