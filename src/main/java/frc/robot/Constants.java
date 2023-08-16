@@ -22,8 +22,8 @@ public final class Constants {
     public static final boolean LeftInverted = true;
     public static final boolean RightInverted = false;
 
-    public static final double WheelCircumference = 4 * 0.0254 * Math.PI; // 4 Inch wheels
-    public static final double GearRatio = 8.14;
+    public static final double WheelCircumference = 6 * 0.0254 * Math.PI; // 4 Inch wheels
+    public static final double GearRatio = 12;
     public static final double PulsePerRotation = 2048;
     public static final double PulsePerMeter = (1/WheelCircumference)*GearRatio*PulsePerRotation;
 
