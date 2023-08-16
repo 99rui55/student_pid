@@ -63,7 +63,7 @@ public class Chassis extends SubsystemBase {
         setPID(right, kp, ki, kd);
     }
 
-    public void setPID() { // read PID from network table
+    public void setPID() { 
         setPID(SmartDashboard.getNumber("Velocity KP", VelocityKP),
                 SmartDashboard.getNumber("Velocity KI", VelocityKI),
                 SmartDashboard.getNumber("Velocity KD", VelocityKD));
