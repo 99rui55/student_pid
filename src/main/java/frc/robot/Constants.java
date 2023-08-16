@@ -33,7 +33,7 @@ public final class Constants {
     // Velocity PID
     public static final double VelocityKP = 100.0/5300.0;
     public static final double VelocityKI = VelocityKP/10;
-    public static final double VelocityKD = 0;
+    public static final double VelocityKD = VelocityKI/10;
 
     public static class OperatorConstants {
       // Controller
