@@ -25,7 +25,7 @@ public class RobotContainer {
   private CommandXboxController  controller = new CommandXboxController(0);
 
   public void configurBindings() {
-    controller.b().onTrue(new VelocityPIDCommand(chassis));
+    controller.b().onTrue(new VelocityPIDCommand(chassis).withTimeout(3));
     controller.a().onTrue(new Drive(chassis));
     
   }
