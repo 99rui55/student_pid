@@ -17,7 +17,7 @@ public class Chassis extends SubsystemBase {
 
     public Chassis(RobotContainer container) {
         this.container = container;
-        left = initMotors(FrontLeftMotor, BackLeftMotor, LeftInverted);
+        left = initMotors(FrontLeftMotor, LeftBackMotor, LeftInverted);
         right = initMotors(FrontRightMotor, BackRightMotor, RightInverted);
     }
 
@@ -28,7 +28,7 @@ public class Chassis extends SubsystemBase {
         m.setInverted(invert);
         f.setInverted(invert);
         f.follow(m);
-        setPID(m, VelocityKP, VelocityKI,VelocityKD);
+        setPID(m, kP, kI,kD);
         return m;
     }
 
@@ -41,8 +41,8 @@ public class Chassis extends SubsystemBase {
         // input in meter per seconds
         left.setIntegralAccumulator(0);
         right.setIntegralAccumulator(0);
-        left.set(ControlMode.Velocity, VelocityToTalonVelocity(l));
-        right.set(ControlMode.Velocity, VelocityToTalonVelocity(r));
+        left.set(ControlMode.Velocity, toPulse(l));
+        right.set(ControlMode.Velocity, toPulse(r));
     }
     public void setVelocity(double v) {
         setVelocity(v, v);
@@ -64,9 +64,9 @@ public class Chassis extends SubsystemBase {
     }
 
     public void setPID() { // read PID from network table
-        setPID(SmartDashboard.getNumber("Velocity KP", VelocityKP),
-                SmartDashboard.getNumber("Velocity KI", VelocityKI),
-                SmartDashboard.getNumber("Velocity KD", VelocityKD));
+        setPID(SmartDashboard.getNumber("Velocity KP", kP),
+                SmartDashboard.getNumber("Velocity KI", kI),
+                SmartDashboard.getNumber("Velocity KD", kD));
     }
 
     // get functions
@@ -80,10 +80,10 @@ public class Chassis extends SubsystemBase {
         return (getLeftDistance() + getRightDistance())/2;
     }
     public double getLeftVelocity() {
-        return TalonVelocityToVelocity(left.getSelectedSensorVelocity());
+        return toVelocity(left.getSelectedSensorVelocity());
     }
     public double getRightVelocity() {
-        return TalonVelocityToVelocity(right.getSelectedSensorVelocity());
+        return toVelocity(right.getSelectedSensorVelocity());
     }
     public double getVelocity() {
         return (getLeftVelocity() + getRightVelocity())/2;
@@ -98,24 +98,24 @@ public class Chassis extends SubsystemBase {
         builder.addDoubleProperty("Left Velocity", this::getLeftVelocity, null);
         builder.addDoubleProperty("Right Velocity", this::getRightVelocity, null);
         builder.addDoubleProperty("Velocity", this::getLeftVelocity, null);
-        SmartDashboard.putNumber("Velocity KP", VelocityKP);
-        SmartDashboard.putNumber("Velocity KD", VelocityKD);
-        SmartDashboard.putNumber("Velocity KI", VelocityKI);
-        addNTField(AutoVelocityID, 1);
+        SmartDashboard.putNumber("Velocity KP", kP);
+        SmartDashboard.putNumber("Velocity KD", kD);
+        SmartDashboard.putNumber("Velocity KI", kI);
+        addNTBox("Wanted Velocity", 1);
     }
 
 
-    // utilities
-    public static double TalonVelocityToVelocity(double v) {
-        return v * 10 / PulsePerMeter;
+    // Tools
+    public static double toVelocity(double pulses) {
+        return pulses * 10 / PulsePerMeter;
     }
     
-    public static double VelocityToTalonVelocity(double v) {
-        return v * PulsePerMeter / 10;
+    public static double toPulse(double velocity) {
+        return velocity * PulsePerMeter / 10;
     }
 
-    // add network table field
-    private void addNTField(String name, double def) {
+    // Add Field
+    private void addNTBox(String name, double def) {
         if(SmartDashboard.getNumber(name, -1) == -1) {
             SmartDashboard.putNumber(name, def);
         }
