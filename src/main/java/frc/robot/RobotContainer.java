@@ -32,7 +32,7 @@ public class RobotContainer {
   private Command keepVelocityPID;
   
   public RobotContainer() {
-    chassis = new ChassisSubsystem();
+    chassis = new ChassisSubsystem(this);
     keepVelocityPID = new KeepVelocityPID(chassis).withTimeout(3);
     // Configure the trigger bindings
     configureBindings();

@@ -5,38 +5,54 @@ import com.ctre.phoenix.motorcontrol.TalonFXControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import com.ctre.phoenix.sensors.PigeonIMU;
 
-
+import edu.wpi.first.util.sendable.SendableBuilder;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.RobotContainer;
+
 import  static frc.robot.Constants.ChassisConstants.*;
 
 public class ChassisSubsystem extends SubsystemBase{
     
-    public TalonFX rightFrontMotor = new TalonFX(rightFrontMotorID);
-    public TalonFX rightBackMotor = new TalonFX(rightBacktMotorID);
-    public TalonFX leftFrontMotor = new TalonFX(leftFrontMotorID);
-    public TalonFX leftBackMotor = new TalonFX(leftBackMotorID);
-    public PigeonIMU gyro = new PigeonIMU(gyroId);
+    TalonFX leftMotors;  // shortcut for leftMotors[0]
+    TalonFX rightMotors;
+    RobotContainer container;
+    PigeonIMU gyro = new PigeonIMU(gyroId);
 
-    public ChassisSubsystem() {
-        rightFrontMotor.setInverted(RightInverted);
-        rightBackMotor.setInverted(RightInverted);
-        leftFrontMotor.setInverted(LeftInverted);
-        leftBackMotor.setInverted(LeftInverted);
-        leftBackMotor.follow(leftFrontMotor);
-        rightBackMotor.follow(rightFrontMotor);
-        setPID(VelocityKP, VelocityKI, VelocityKD);
+    public ChassisSubsystem(RobotContainer container) {
+        this.container = container;
+        leftMotors = initMotors(leftFrontMotorID, leftBackMotorID, LeftInverted);
+        rightMotors = initMotors(rightFrontMotorID, rightBackMotorID, RightInverted);
+    }
+
+    private TalonFX initMotors(int main, int follower, boolean invert) {
+        TalonFX m = new TalonFX(main);
+        TalonFX f = new TalonFX(follower);
+        m.setInverted(invert);
+        f.setInverted(invert);
+        f.follow(m);
+        setPID(m, VelocityKP, VelocityKI,VelocityKD);
+        return m;
     }
 
     public void setPower(double left, double right){
-        rightFrontMotor.set(ControlMode.PercentOutput, right);
-        leftFrontMotor.set(ControlMode.PercentOutput, left);
+        rightMotors.set(ControlMode.PercentOutput, right);
+        leftMotors.set(ControlMode.PercentOutput, left);
+    }
+
+    public void stop() {
+        setPower(0,0);
     }
 
     public void setVelocity(double left, double right){
-        leftFrontMotor.setIntegralAccumulator(0);
-        rightFrontMotor.setIntegralAccumulator(0);
-        rightFrontMotor.set(TalonFXControlMode.Velocity, (right * PulsePerMeter / 10));
-        leftFrontMotor.set(TalonFXControlMode.Velocity, left * PulsePerMeter / 10);
+        leftMotors.setIntegralAccumulator(0);
+        rightMotors.setIntegralAccumulator(0);
+        rightMotors.set(TalonFXControlMode.Velocity, VelocityToTalonVelocity(right));
+        leftMotors.set(TalonFXControlMode.Velocity,VelocityToTalonVelocity(left));
+    }
+
+    public void setVelocity(double v) {
+        setVelocity(v, v);
     }
 
     private void setPID(TalonFX motor,double kp, double ki, double kd ) {
@@ -46,8 +62,38 @@ public class ChassisSubsystem extends SubsystemBase{
     }
 
     public void setPID(double kp, double ki, double kd) {
-        setPID(leftFrontMotor, kp, ki, kd);
-        setPID(rightFrontMotor, kp, ki, kd);
-        
+        setPID(leftMotors, kp, ki, kd);
+        setPID(rightMotors, kp, ki, kd);
+    }
+
+    public void setPID() { // read PID from network table
+        setPID(SmartDashboard.getNumber("Velocity KP", VelocityKP),
+                SmartDashboard.getNumber("Velocity KI", VelocityKI),
+                SmartDashboard.getNumber("Velocity KD", VelocityKD));
+    }
+
+    public double getLeftVelocity() {
+        return TalonVelocityToVelocity(leftMotors.getSelectedSensorVelocity());
+    }
+    public double getRightVelocity() {
+        return TalonVelocityToVelocity(rightMotors.getSelectedSensorVelocity());
+    }
+    public double getVelocity() {
+        return (getLeftVelocity() + getRightVelocity())/2;
+    }
+
+    public static double TalonVelocityToVelocity(double v) {
+        return v * 10 / PulsePerMeter;
+    }
+    
+    public static double VelocityToTalonVelocity(double v) {
+        return v * PulsePerMeter / 10;
+    }
+
+    @Override
+    public void initSendable(SendableBuilder builder) {
+        super.initSendable(builder);
+        SmartDashboard.putNumber("Set Velocity", 0);
+        builder.addDoubleProperty("Realtime Velocity", null, null);
     }
 }
