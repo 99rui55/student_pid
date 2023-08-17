@@ -23,6 +23,7 @@ public class ChassisSubsystem extends SubsystemBase{
         this.container = container;
         leftMotors = initMotors(leftFrontMotorID, leftBackMotorID, LeftInverted);
         rightMotors = initMotors(rightFrontMotorID, rightBackMotorID, RightInverted);
+        SmartDashboard.putData(this);
     }
 
     private TalonFX initMotors(int main, int follower, boolean invert) {
@@ -31,7 +32,7 @@ public class ChassisSubsystem extends SubsystemBase{
         m.setInverted(invert);
         f.setInverted(invert);
         f.follow(m);
-        setPID(m, VelocityKP, VelocityKI,VelocityKD);
+        setPID(m, VelocityKP, VelocityKI, VelocityKD);
         return m;
     }
 
@@ -72,6 +73,16 @@ public class ChassisSubsystem extends SubsystemBase{
                 SmartDashboard.getNumber("Velocity KD", VelocityKD));
     }
 
+    //getters
+    public double getLeftDistance() {
+        return leftMotors.getSelectedSensorPosition()/PulsePerMeter;
+    }
+    public double getRightDistance() {
+        return rightMotors.getSelectedSensorPosition()/PulsePerMeter;
+    }
+    public double getDistance() {
+        return (getLeftDistance() + getRightDistance())/2;
+    }
     public double getLeftVelocity() {
         return TalonVelocityToVelocity(leftMotors.getSelectedSensorVelocity());
     }
@@ -82,7 +93,23 @@ public class ChassisSubsystem extends SubsystemBase{
         return (getLeftVelocity() + getRightVelocity())/2;
     }
 
-    public static double TalonVelocityToVelocity(double v) {
+   @Override
+    public void initSendable(SendableBuilder builder) {
+        super.initSendable(builder);
+        SmartDashboard.putNumber("Desired Velocity", 0);
+        builder.addDoubleProperty("Left Distance", this::getLeftDistance, null);
+        builder.addDoubleProperty("Right Distance", this::getRightDistance, null);
+        builder.addDoubleProperty("Distance", this::getDistance, null);
+        builder.addDoubleProperty("Left Velocity", this::getLeftVelocity, null);
+        builder.addDoubleProperty("Right Velocity", this::getRightVelocity, null);
+        builder.addDoubleProperty("Velocity", this::getLeftVelocity, null);
+        SmartDashboard.putNumber("Velocity KP", VelocityKP);
+        SmartDashboard.putNumber("Velocity KD", VelocityKD);
+        SmartDashboard.putNumber("Velocity KI", VelocityKI);
+    }
+        
+    // utilities
+     public static double TalonVelocityToVelocity(double v) {
         return v * 10 / PulsePerMeter;
     }
     
@@ -90,10 +117,5 @@ public class ChassisSubsystem extends SubsystemBase{
         return v * PulsePerMeter / 10;
     }
 
-    @Override
-    public void initSendable(SendableBuilder builder) {
-        super.initSendable(builder);
-        SmartDashboard.putNumber("Set Velocity", 0);
-        builder.addDoubleProperty("Realtime Velocity", null, null);
-    }
+    
 }

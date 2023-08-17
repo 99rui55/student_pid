@@ -13,23 +13,16 @@ public class KeepVelocityPID  extends CommandBase{
     public KeepVelocityPID(ChassisSubsystem chassis){
         this.chassis = chassis;
         addRequirements(chassis);
-        SmartDashboard.putData(this);
     }
 
     @Override
     public void initialize() {
-        chassis.setVelocity(SmartDashboard.getNumber("Set Velocity", 0));
-        System.out.println("Velocity: " + SmartDashboard.getNumber("Set Velocity", 0));
+        chassis.setVelocity(SmartDashboard.getNumber("Desired Velocity", 0));
+        chassis.setPID();
     }
     
     @Override
     public void end(boolean interrupted) {
-        chassis.setPower(0, 0);
+        chassis.stop();;
     }
-
-    @Override
-    public void initSendable(SendableBuilder builder) {
-        
-    }
-    
 }
