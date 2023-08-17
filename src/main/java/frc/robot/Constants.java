@@ -16,7 +16,7 @@ public final class Constants {
   public static class ChassisConstants{
     // Motors
     public static final int rightFrontMotorID = 1;
-    public static final int rightBacktMotorID = 2;
+    public static final int rightBackMotorID = 2;
     public static final int leftFrontMotorID = 3;
     public static final int leftBackMotorID = 4;
     public static final boolean LeftInverted = false;
