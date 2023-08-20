@@ -4,9 +4,9 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Chassis;
 
-
 public class VelocityPIDCommand extends CommandBase {
     Chassis chassis;
+
     public VelocityPIDCommand(Chassis chassis) {
         this.chassis = chassis;
         addRequirements(chassis);
@@ -24,5 +24,4 @@ public class VelocityPIDCommand extends CommandBase {
         chassis.setVelocity(0);
     }
 
-    
 }
