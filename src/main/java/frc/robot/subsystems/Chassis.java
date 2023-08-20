@@ -3,14 +3,17 @@ package frc.robot.subsystems;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
 
+import edu.wpi.first.util.sendable.Sendable;
 import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import static frc.robot.Constants.ChassisConstants;
 
 public class Chassis extends SubsystemBase {
 
-    TalonFX left;  // shortcut for leftMotors[0]
+    TalonFX left;
     TalonFX right;
 
     public Chassis() {
@@ -19,6 +22,18 @@ public class Chassis extends SubsystemBase {
         right = initMotors(ChassisConstants.RightFrontMotor, ChassisConstants.RightBackMotor, ChassisConstants.RightInverted);
     
         SmartDashboard.putData("Chassis",this);
+    }
+
+    public void setBrake(Chassis chassis){
+        Command cmd = new InstantCommand(()-> chassis.setBrake(chassis), chassis);
+        cmd = cmd.ignoringDisable(true);
+        SmartDashboard.putData("brake", (Sendable) cmd);
+    }
+
+    public void setCoast(Chassis chassis){
+        Command cmd = new InstantCommand(()-> chassis.setCoast(chassis), chassis);
+        cmd = cmd.ignoringDisable(true);
+        SmartDashboard.putData("coast", (Sendable) cmd);
     }
 
     // Init motors for one side
