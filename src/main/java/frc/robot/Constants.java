@@ -14,7 +14,7 @@ import java.lang.Math;
  * constants are needed, to reduce verbosity.
  */
 public final class Constants {
-  public static class ChassisConstants {
+  public static class   ChassisConstants {
     public static final int LeftFrontMotor = 1;
     public static final int LeftBackMotor = 2;
     public static final int RightFrontMotor = 3;

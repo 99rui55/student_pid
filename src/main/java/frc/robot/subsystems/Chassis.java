@@ -10,10 +10,18 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import static frc.robot.Constants.ChassisConstants;
 
+import java.sql.Wrapper;
+
 public class Chassis extends SubsystemBase {
 
     TalonFX left;
     TalonFX right;
+
+    TalonFX motorLF = new TalonFX(ChassisConstants.LeftFrontMotor);
+    TalonFX motorLB = new TalonFX(ChassisConstants.LeftBackMotor);
+    TalonFX motorRF = new TalonFX(ChassisConstants.RightFrontMotor);
+    TalonFX motorRB = new TalonFX(ChassisConstants.RightBackMotor);
+    
 
     public Chassis() {
         super();
@@ -21,19 +29,6 @@ public class Chassis extends SubsystemBase {
         right = initMotors(ChassisConstants.RightFrontMotor, ChassisConstants.RightBackMotor, ChassisConstants.RightInverted);
     
         SmartDashboard.putData("Chassis",this);
-    }
-    public boolean buttonState = false;
-
-    public void setBrake(){ //fasle
-        Command cmd = new InstantCommand(()-> setBrake(), this);
-        SmartDashboard.putData("brake", cmd.ignoringDisable(true));
-        buttonState = false;
-    }
-
-    public void setCoast(){ //true
-        Command cmd = new InstantCommand(()-> setCoast(), this);
-        SmartDashboard.putData("coast", cmd.ignoringDisable(true));
-        buttonState = true;
     }
 
     // Init motors for one side
@@ -104,6 +99,12 @@ public class Chassis extends SubsystemBase {
         return (getLeftVelocity() + getRightVelocity())/2;
     }
 
+    public void brake() {
+        // motorLB.setNeutralMode();
+    }
+
+    public void coast() {}
+
     @Override
     public void initSendable(SendableBuilder builder) {
         super.initSendable(builder);
@@ -116,6 +117,12 @@ public class Chassis extends SubsystemBase {
         SmartDashboard.putNumber("Velocity KP", ChassisConstants.VelocityKP);
         SmartDashboard.putNumber("Velocity KD", ChassisConstants.VelocityKD);
         SmartDashboard.putNumber("Velocity KI", ChassisConstants.VelocityKI);
+
+        InstantCommand cmdBrake = new InstantCommand(()-> brake(), this);
+        SmartDashboard.putData("brake", cmdBrake.ignoringDisable(true));
+
+        InstantCommand cmdCoast = new InstantCommand(()-> coast(), this);
+        SmartDashboard.putData("coast", cmdCoast.ignoringDisable(true));
     }
 
 
