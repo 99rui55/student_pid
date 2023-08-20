@@ -4,14 +4,20 @@
 
 package frc.robot.subsystems;
 
+import java.sql.Wrapper;
+
 import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
 
 import com.ctre.phoenix.sensors.PigeonIMU;
 
 import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj2.command.WrapperCommand;
 import frc.robot.Constants;
 
 public class Chassis extends SubsystemBase {
@@ -86,13 +92,50 @@ public Chassis() {
     DLMotor.set(ControlMode.Velocity, left*Constants.PulsePerMeter/10);
     System.out.println(" Set Velocitt " + left + "   " + right);
   }
+  public double getleftPower(){
+    return LFMotor.getMotorOutputPercent();
+  }
+
+  public double getRightPower(){
+    return RFMotor.getMotorOutputPercent();
+  }
+
+  public double getRobotPosition() {
+    return RFMotor.getSelectedSensorPosition();
+  }
+  public void Brake() {
+    RFMotor.setNeutralMode(NeutralMode.Brake);
+    DLMotor.setNeutralMode(NeutralMode.Brake);
+    DRMotor.setNeutralMode(NeutralMode.Brake);
+    LFMotor.setNeutralMode(NeutralMode.Brake);
+  }
+  public void Coast() {
+    RFMotor.setNeutralMode(NeutralMode.Coast);
+    DLMotor.setNeutralMode(NeutralMode.Coast);
+    DRMotor.setNeutralMode(NeutralMode.Coast);
+    LFMotor.setNeutralMode(NeutralMode.Coast);
+  }
+
   @Override
   public void initSendable(SendableBuilder builder) {
       // TODO Auto-generated method stub
       super.initSendable(builder);
+      WrapperCommand cmd = new InstantCommand(
+      ()->this.Brake(), this).ignoringDisable(true);
+      SmartDashboard.putData("brake", cmd);
+
+      WrapperCommand cnd = new InstantCommand(
+        ()->this.Coast(), this).ignoringDisable(true);
+        SmartDashboard.putData("Coast", cnd);
+
       builder.addDoubleProperty("L Velocity", this::getLeftVelocity, null);
       builder.addDoubleProperty("R Velocity", this::getRightVelocity, null);
+      builder.addDoubleProperty("Robot position", this::getRobotPosition, null);
+      builder.addDoubleProperty("Left side power", this::getleftPower, null);
+      builder.addDoubleProperty("Right side power", this::getRightPower, null);
       System.out.println(" Init Sendable Done");
-  }
+       
+    }
+
 }
 
