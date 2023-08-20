@@ -3,7 +3,6 @@ package frc.robot.subsystems;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
 
-import edu.wpi.first.util.sendable.Sendable;
 import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -23,15 +22,18 @@ public class Chassis extends SubsystemBase {
     
         SmartDashboard.putData("Chassis",this);
     }
+    public boolean buttonState = false;
 
-    public void setBrake(){
+    public void setBrake(){ //fasle
         Command cmd = new InstantCommand(()-> setBrake(), this);
         SmartDashboard.putData("brake", cmd.ignoringDisable(true));
+        buttonState = false;
     }
 
-    public void setCoast(){
+    public void setCoast(){ //true
         Command cmd = new InstantCommand(()-> setCoast(), this);
         SmartDashboard.putData("coast", cmd.ignoringDisable(true));
+        buttonState = true;
     }
 
     // Init motors for one side
