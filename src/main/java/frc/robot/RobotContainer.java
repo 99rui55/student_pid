@@ -7,7 +7,7 @@ package frc.robot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.commands.Drive;
-import frc.robot.commands.VelocityPIDCommand;
+import frc.robot.commands.PIDCommand;
 import frc.robot.subsystems.Chassis;
 
 public class RobotContainer {
@@ -25,7 +25,7 @@ public class RobotContainer {
   private CommandXboxController  controller = new CommandXboxController(0);
 
   public void configurBindings() {
-    controller.b().onTrue(new VelocityPIDCommand(chassis).withTimeout(3));
+    controller.b().onTrue(new PIDCommand(chassis).withTimeout(3));
     controller.a().onTrue(new Drive(chassis));
     
   }
@@ -36,7 +36,7 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
-      return new VelocityPIDCommand(chassis).withTimeout(3);
+      return new PIDCommand(chassis).withTimeout(3);
       // return ;
   }
 }

@@ -6,10 +6,10 @@ import frc.robot.subsystems.Chassis;
 import static frc.robot.Constants.ChassisConstants;
 
 
-public class VelocityPIDCommand extends CommandBase {
+public class PIDCommand extends CommandBase {
     Chassis chassis;
 
-    public VelocityPIDCommand(Chassis chassis) {
+    public PIDCommand(Chassis chassis) {
         this.chassis = chassis;
         addRequirements(chassis);
     }
