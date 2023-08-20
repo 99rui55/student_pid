@@ -26,14 +26,12 @@ public class Chassis extends SubsystemBase {
 
     public void setBrake(Chassis chassis){
         Command cmd = new InstantCommand(()-> chassis.setBrake(chassis), chassis);
-        cmd = cmd.ignoringDisable(true);
-        SmartDashboard.putData("brake", (Sendable) cmd);
+        SmartDashboard.putData("brake", cmd.ignoringDisable(true));
     }
 
     public void setCoast(Chassis chassis){
         Command cmd = new InstantCommand(()-> chassis.setCoast(chassis), chassis);
-        cmd = cmd.ignoringDisable(true);
-        SmartDashboard.putData("coast", (Sendable) cmd);
+        SmartDashboard.putData("coast", cmd.ignoringDisable(true));
     }
 
     // Init motors for one side
