@@ -97,11 +97,10 @@ public class Chassis extends SubsystemBase {
         builder.addDoubleProperty("Distance", this::getDistance, null);
         builder.addDoubleProperty("Left Velocity", this::getLeftVelocity, null);
         builder.addDoubleProperty("Right Velocity", this::getRightVelocity, null);
-        builder.addDoubleProperty("Velocity", this::getLeftVelocity, null);
+        builder.addDoubleProperty("Velocity", this::getVelocity, null);
         SmartDashboard.putNumber("Velocity KP", ChassisConstants.VelocityKP);
         SmartDashboard.putNumber("Velocity KD", ChassisConstants.VelocityKD);
         SmartDashboard.putNumber("Velocity KI", ChassisConstants.VelocityKI);
-        addNTField(ChassisConstants.AutoVelocityID, 1);
     }
 
 
@@ -112,13 +111,6 @@ public class Chassis extends SubsystemBase {
     
     public static double VelocityToTalonVelocity(double velocity) {
         return velocity * ChassisConstants.PulsePerMeter / 10;
-    }
-
-    // add network table field
-    private void addNTField(String name, double def) {
-        if(SmartDashboard.getNumber(name, -1) == -1) {
-            SmartDashboard.putNumber(name, def);
-        }
     }
 
 
