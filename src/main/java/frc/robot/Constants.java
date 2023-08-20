@@ -16,7 +16,7 @@ import java.lang.Math;
 public final class Constants {
   public static class ChassisConstants {
     public static final int FrontLeftMotor = 1;
-    public static final int LeftBackMotor = 2;
+    public static final int BackLeftMotor = 2;
     public static final int FrontRightMotor = 3;
     public static final int BackRightMotor = 3;
     public static final boolean LeftInvert = true;

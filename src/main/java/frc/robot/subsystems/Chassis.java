@@ -1,54 +1,76 @@
 package frc.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
 
 import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import static frc.robot.Constants.ChassisConstants.*;
 import frc.robot.RobotContainer;
 
 public class Chassis extends SubsystemBase {
 
-    TalonFX left;  // shortcut for leftMotors[0]
-    TalonFX right;
+    TalonFX leftMotor = new TalonFX(FrontLeftMotor);
+    TalonFX backLeftMotor = new TalonFX(BackLeftMotor);
+
+    TalonFX rightMotor = new TalonFX(FrontRightMotor);
+    TalonFX backRightMotor = new TalonFX(BackRightMotor);
+    
     RobotContainer container; // for future use
+
 
     public Chassis(RobotContainer container) {
         this.container = container;
-        left = initMotors(FrontLeftMotor, LeftBackMotor, LeftInvert);
-        right = initMotors(FrontRightMotor, BackRightMotor, RightInvert);
+        initMotors(leftMotor, backLeftMotor, LeftInvert);
+        initMotors(rightMotor, backRightMotor, RightInvert);
         setPID();
     }
 
-    // Init motors for one side
-    private TalonFX initMotors(int main, int follower, boolean invert) {
-        TalonFX m = new TalonFX(main);
-        TalonFX f = new TalonFX(follower);
-        m.setInverted(invert);
-        f.setInverted(invert);
-        f.follow(m);
-        setPID(m, kP, kI,kD);
-        return m;
+    // this function initiates two motors
+    private void initMotors(TalonFX front, TalonFX back, boolean invert) {
+        front.setInverted(invert);
+        back.setInverted(invert);
+        back.follow(front);
+        setPID(front, kP, kI,kD);
+    }
+
+    public double return0() {
+        return 0;
     }
 
     public void setPower(double l, double r) {
-        left.set(ControlMode.PercentOutput, l);
-        right.set(ControlMode.PercentOutput, r);
+        leftMotor.set(ControlMode.PercentOutput, l);
+        rightMotor.set(ControlMode.PercentOutput, r);
     }
 
     public void setVelocity(double l, double r) {
         // input in meter per seconds
-        left.setIntegralAccumulator(0);
-        right.setIntegralAccumulator(0);
-        left.set(ControlMode.Velocity, toPulse(l));
-        right.set(ControlMode.Velocity, toPulse(r));
+        leftMotor.setIntegralAccumulator(0);
+        rightMotor.setIntegralAccumulator(0);
+        leftMotor.set(ControlMode.Velocity, toPulse(l));
+        rightMotor.set(ControlMode.Velocity, toPulse(r));
     }
     public void setVelocity(double v) {
         setVelocity(v, v);
     }
     
+    public void setBrake() {
+        leftMotor.setNeutralMode(NeutralMode.Brake);
+        rightMotor.setNeutralMode(NeutralMode.Brake);
+        leftMotor.setNeutralMode(NeutralMode.Brake);
+        backLeftMotor.setNeutralMode(NeutralMode.Brake);
+    }
+
+    public void setCoast() {
+        leftMotor.setNeutralMode(NeutralMode.Coast);
+        rightMotor.setNeutralMode(NeutralMode.Coast);
+        leftMotor.setNeutralMode(NeutralMode.Coast);
+        backLeftMotor.setNeutralMode(NeutralMode.Coast);
+    }
+
     public void stop() {
         setPower(0,0);
     }
@@ -60,8 +82,8 @@ public class Chassis extends SubsystemBase {
     }
 
     public void setPID(double kp, double ki, double kd) {
-        setPID(left, kp, ki, kd);
-        setPID(right, kp, ki, kd);
+        setPID(leftMotor, kp, ki, kd);
+        setPID(rightMotor, kp, ki, kd);
     }
 
     public void setPID() { // read PID from network table
@@ -72,31 +94,37 @@ public class Chassis extends SubsystemBase {
 
     // get functions
     public double getLeftDistance() {
-        return left.getSelectedSensorPosition()/PulsePerMeter;
+        return leftMotor.getSelectedSensorPosition()/PulsePerMeter;
     }
     public double getRightDistance() {
-        return right.getSelectedSensorPosition()/PulsePerMeter;
+        return rightMotor.getSelectedSensorPosition()/PulsePerMeter;
     }
     public double getDistance() {
         return (getLeftDistance() + getRightDistance())/2;
     }
     public double getLeftVelocity() {
-        return toVelocity(left.getSelectedSensorVelocity());
+        return toVelocity(leftMotor.getSelectedSensorVelocity());
     }
     public double getRightVelocity() {
-        return toVelocity(right.getSelectedSensorVelocity());
+        return toVelocity(rightMotor.getSelectedSensorVelocity());
     }
     public double getVelocity() {
         return (getLeftVelocity() + getRightVelocity())/2;
     }
-
-    @Override
-    public void initSendable(SendableBuilder builder) {
-        super.initSendable(builder);
-        builder.addDoubleProperty("Left Velocity", this::getLeftVelocity, null);
-        builder.addDoubleProperty("Right Velocity", this::getRightVelocity, null);
-        builder.addDoubleProperty("Set Velocity", null, null);
+    public double getLeftPower() {
+        return (leftMotor.getMotorOutputPercent());
     }
+    public double getRightPower() {
+        return (rightMotor.getMotorOutputPercent());
+    }
+
+    // @Override
+    // public void initSendable(SendableBuilder builder) {
+    //     super.initSendable(builder);
+    //     builder.addDoubleProperty("Left Velocity", this::getLeftVelocity, null);
+    //     builder.addDoubleProperty("Right Velocity", this::getRightVelocity, null);
+    //     builder.addDoubleProperty("Set Velocity", null, null);
+    // }
 
 
     // Tools
@@ -107,13 +135,23 @@ public class Chassis extends SubsystemBase {
     public static double toPulse(double velocity) {
         return velocity * PulsePerMeter / 10;
     }
+    
 
-    // Add Field
-    private void addNTBox(String name, double def) {
-        if(SmartDashboard.getNumber(name, -1) == -1) {
-            SmartDashboard.putNumber(name, def);
-        }
+    @Override
+    public void initSendable(SendableBuilder builder) {
+        super.initSendable(builder);
+        builder.addDoubleProperty("Realtime velocity", this::getVelocity, null);
+        builder.addDoubleProperty("Set velocity", this::return0, this::setVelocity);
+
+        
+        builder.addDoubleProperty("Left Velocity", this::getLeftVelocity, null);
+        builder.addDoubleProperty("Right Velocity", this::getRightVelocity, null);
+        builder.addDoubleProperty("Left Distance", this::getLeftDistance, null);
+        builder.addDoubleProperty("Right Distance", this::getLeftDistance, null);
+        builder.addDoubleProperty("Left Power", this::getLeftPower, null);
+        builder.addDoubleProperty("Right Power", this::getLeftPower, null);
+        SmartDashboard.putData("Brake", new InstantCommand(()->this.setBrake(), this).ignoringDisable(true));
+        SmartDashboard.putData("Coast", new InstantCommand(()->this.setCoast(), this).ignoringDisable(true));
     }
-
 
 }
