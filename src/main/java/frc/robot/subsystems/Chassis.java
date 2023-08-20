@@ -24,13 +24,13 @@ public class Chassis extends SubsystemBase {
         SmartDashboard.putData("Chassis",this);
     }
 
-    public void setBrake(Chassis chassis){
-        Command cmd = new InstantCommand(()-> chassis.setBrake(chassis), chassis);
+    public void setBrake(){
+        Command cmd = new InstantCommand(()-> setBrake(), this);
         SmartDashboard.putData("brake", cmd.ignoringDisable(true));
     }
 
-    public void setCoast(Chassis chassis){
-        Command cmd = new InstantCommand(()-> chassis.setCoast(chassis), chassis);
+    public void setCoast(){
+        Command cmd = new InstantCommand(()-> setCoast(), this);
         SmartDashboard.putData("coast", cmd.ignoringDisable(true));
     }
 
