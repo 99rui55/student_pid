@@ -20,7 +20,7 @@ public class PidDrive extends CommandBase {
   @Override
   public void initSendable(SendableBuilder builder) {
 
-    builder.addDoubleProperty("Current Velocity", chassis::getVelocity, null);
+    builder.addDoubleProperty("Current Velocity", chassis::getVelocityRight, null);
     builder.addDoubleProperty("Wanted Velocity", this::getWantedVelocity, this::setWantedVelocity);
   }
 
