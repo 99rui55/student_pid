@@ -1,6 +1,7 @@
 package frc.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
 
 import edu.wpi.first.util.sendable.SendableBuilder;
@@ -98,10 +99,18 @@ public class Chassis extends SubsystemBase {
     }
 
     public void brake() {
-        // motorLB.setNeutralMode();
+        motorLF.setNeutralMode(NeutralMode.Brake);
+        motorLB.setNeutralMode(NeutralMode.Brake);
+        motorRF.setNeutralMode(NeutralMode.Brake);
+        motorRB.setNeutralMode(NeutralMode.Brake);
     }
 
-    public void coast() {}
+    public void coast() {
+        motorLF.setNeutralMode(NeutralMode.Coast);
+        motorLB.setNeutralMode(NeutralMode.Coast);
+        motorRF.setNeutralMode(NeutralMode.Coast);
+        motorRB.setNeutralMode(NeutralMode.Coast);
+    }
 
     @Override
     public void initSendable(SendableBuilder builder) {
