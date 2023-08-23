@@ -1,6 +1,7 @@
 package frc.robot.subsystems;
 
 
+import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
@@ -9,6 +10,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.DemandType;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
 
@@ -18,6 +20,7 @@ public class Chassis extends SubsystemBase {
     private TalonFX rightBkTalonFX;
     private TalonFX leftBkTalonFX;
     private TalonFX leftFrTalonFx;
+    SimpleMotorFeedforward gg = new SimpleMotorFeedforward(Constants.ks, Constants.kv, Constants.ka);
 
     
   /** Creates a new Chassis. */
@@ -45,7 +48,6 @@ public class Chassis extends SubsystemBase {
       ()->this.setBrake(),this).ignoringDisable(true));
     SmartDashboard.putData("Coast", new InstantCommand(
       ()->this.setCoast(),this).ignoringDisable(true));
-
   }
 
 
@@ -63,10 +65,11 @@ public class Chassis extends SubsystemBase {
     return (leftBkTalonFX.getSelectedSensorPosition() +
     leftFrTalonFx.getSelectedSensorPosition())/2/Constants.pulsePerMeter*10;
   }
-  public void setV(double v){
+  public void setV(double v, double a){
     double v2 = (v*Constants.pulsePerMeter)/10;
     rightBkTalonFX.setIntegralAccumulator(0);
-    rightBkTalonFX.set(ControlMode.Velocity,v2 ); 
+    double g = gg.calculate(v, a);
+    rightBkTalonFX.set(ControlMode.Velocity,v2 , DemandType.ArbitraryFeedForward, g/12); 
   }
   
   @Override

@@ -11,18 +11,20 @@ import frc.robot.subsystems.Chassis;
 public class MoveForTime extends CommandBase{
   private Chassis chassis;
   private double v;
+  private double a;
   /** Creates a new MoveForTime. */
-  public MoveForTime(Chassis chassis, double v) {
+  public MoveForTime(Chassis chassis, double v, double a) {
     addRequirements(chassis);
     this.chassis = chassis;
     this.v = v;
+    this.a = a;
     // Use addRequirements() here to declare subsystem dependencies.
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    chassis.setV(v);
+    chassis.setV(v,a);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
