@@ -24,4 +24,7 @@ public final class Constants {
   public static final double VelocityKD = 0.00005;
   public static final double wantedvelosity = 0.2;
 
+  public static final int CLIMBER_CHANNEL_A    = 0;
+  public static final int CLIMBER_CHANNEL_B    = 1;
+
 }
