@@ -31,9 +31,9 @@ public class Chassis extends SubsystemBase {
         SmartDashboard.putData("Chassis",this);
     }
 
-    private TalonFX initMotors(int mainn, int followerr, boolean invert) {
-        TalonFX main = new TalonFX(mainn);
-        TalonFX follower = new TalonFX(followerr);
+    private TalonFX initMotors(int mainM, int followerM, boolean invert) {
+        TalonFX main = new TalonFX(mainM);
+        TalonFX follower = new TalonFX(followerM);
         main.setInverted(invert);
         follower.setInverted(invert);
         follower.follow(main);
@@ -41,16 +41,16 @@ public class Chassis extends SubsystemBase {
         return main;
     }
 
-    public void setPower(double leftt, double rightt) {
-        left.set(ControlMode.PercentOutput, leftt);
-        right.set(ControlMode.PercentOutput, rightt);
+    public void setPower(double leftP, double rightP) {
+        left.set(ControlMode.PercentOutput, leftP);
+        right.set(ControlMode.PercentOutput, rightP);
     }
 
-    public void setVelocity(double leftt, double rightt) {
+    public void setVelocity(double leftV, double rightV) {
         left.setIntegralAccumulator(0);
         right.setIntegralAccumulator(0);
-        left.set(ControlMode.Velocity, leftt * Constants.PulsePerMeter / 10, DemandType.ArbitraryFeedForward, Constants.KV*Math.signum(leftt) + Constants.KS*leftt);
-        right.set(ControlMode.Velocity, rightt * Constants.PulsePerMeter / 10, DemandType.ArbitraryFeedForward, Constants.KV*Math.signum(rightt) + Constants.KS*rightt);
+        left.set(ControlMode.Velocity, leftV * Constants.PulsePerMeter / 10, DemandType.ArbitraryFeedForward, Constants.KV*Math.signum(leftV) + Constants.KS*leftV);
+        right.set(ControlMode.Velocity, rightV * Constants.PulsePerMeter / 10, DemandType.ArbitraryFeedForward, Constants.KV*Math.signum(rightV) + Constants.KS*rightV);
     }
     
     public void stop() {
@@ -84,10 +84,10 @@ public class Chassis extends SubsystemBase {
         return (getLeftDistance() + getRightDistance())/2;
     }
     public double getLeftVelocity() {
-        return TalonVelocityToVelocity(left.getSelectedSensorVelocity());
+        return left.getSelectedSensorVelocity() * 10 / Constants.PulsePerMeter;
     }
     public double getRightVelocity() {
-        return TalonVelocityToVelocity(right.getSelectedSensorVelocity());
+        return right.getSelectedSensorVelocity() * 10 / Constants.PulsePerMeter;
     }
     public double getVelocity() {
         return (getLeftVelocity() + getRightVelocity())/2;
