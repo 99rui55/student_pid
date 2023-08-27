@@ -15,15 +15,27 @@ package frc.robot;
 public final class Constants {
   public static class OperatorConstants {
     public static final int kDriverControllerPort = 0;
-    public static final double cPerM = 161684.21;
-    public static final double kP = 0.01;
+    public static final double wheelCirc = 6*0.0254*Math.PI;
+    public static final double GearRatio = 12;
+    public static final double CountsPerRevolution = 2048;
+    public static final double cPerM = (1/wheelCirc)*GearRatio*CountsPerRevolution; //161684.21;
+    //public static final double kP = 0.01;
+    //public static final double kP = 0.002;
+    public static final double kP = 0.0;
+
     //public static final double kI = 0.0015;
     //public static final double kI = 0.0008;
-    public static final double kI = 0.00065;
+    //public static final double kI = 0.00065;
+    public static final double kI = 0.0;
     //public static final double kD = 0;
-    public static final double kD = 0.0002;
+    //public static final double kD = 0.0002;
+    public static final double kD = 0.0;
 
     public static final int leftSide = 0;
     public static final int rightSide = 2;
+
+    public static final double kS = 0.00611;
+    public static final double kV = 0.6453;
+    public static final double kA = 0.0243;
   }
 }
