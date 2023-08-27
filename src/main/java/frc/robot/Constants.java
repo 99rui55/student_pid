@@ -17,14 +17,16 @@ public final class Constants {
   public static final int rightBackMotorID = 2;
   public static final int leftFrontMotorID = 3;
   public static final int leftBackMotorID = 4;
+
   public static final double pulsePerMeter = 51339;
+
   public static final double kp = 0.002;
   public static final double ki = 0.0006;
   public static final double kd = 0.00;
 
-  public static final double kv = 0.0044625;
-  public static final double ka = 0.0002524;
-  public static final double ks = 0.0098421;
+  public static final double kv = 0.64538;
+  public static final double ka = 0.024367;
+  public static final double ks = 0.0061182;
   
-  public static final double sp = 1;
+  public static final double sp = 0.7;
 }

@@ -6,7 +6,7 @@ package frc.robot;
 
 //import frc.robot.commands.Autos;
 //import frc.robot.commands.ExampleCommand;
-import frc.robot.commands.MoveForTime;
+import frc.robot.commands.MoveAndStay;
 //import frc.robot.subsystems.ExampleSubsystem;
 import frc.robot.subsystems.Chassis;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -21,7 +21,8 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
  */
 public class RobotContainer {
   public Chassis chassis = new Chassis();
-  MoveForTime move1 = new MoveForTime(chassis, Constants.sp, 0);
+  MoveAndStay move1 = new MoveAndStay(chassis, Constants.sp,Constants.sp);
+
   // The robot's subsystems and commands are defined here...
   //private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
 

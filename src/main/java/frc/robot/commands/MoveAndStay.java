@@ -10,30 +10,42 @@ import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Chassis;
 
-public class MoveForTime extends CommandBase{
+public class MoveAndStay extends CommandBase{
   private Chassis chassis;
   private double vr;
   private double vl;
+  PigeonIMU gyro = new PigeonIMU(14);
   private double startAngle;
   /** Creates a new MoveForTime. */
-  public MoveForTime(Chassis chassis, double vr, double vl) {
+  public MoveAndStay(Chassis chassis, double vr, double vl) {
     addRequirements(chassis);
     this.chassis = chassis;
     this.vr = vr;
     this.vl = vl;
+    this.startAngle = gyro.getFusedHeading();
     // Use addRequirements() here to declare subsystem dependencies.
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    chassis.setV(vr,vl);
+    
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-
+    double currentAngle = gyro.getFusedHeading();
+    if(currentAngle > startAngle + 3){
+      chassis.setV(vr,-vl);
+    }
+    if(gyro.getFusedHeading() < startAngle - 3){
+      chassis.setV(-vr,vl);
+      
+    }
+    if((gyro.getFusedHeading() <= startAngle + 3)&&(gyro.getFusedHeading() >= startAngle - 3)){
+      chassis.setV(vr,vl);
+    }
   }
 
   // Called once the command ends or is interrupted.
