@@ -17,7 +17,7 @@ public class PIDCommand extends CommandBase {
     public void initialize() {
         double velocity = SmartDashboard.getNumber("AutoVelocity", 0);
         chassis.setPID();
-        chassis.setVelocity(velocity);
+        chassis.setVelocity(velocity, velocity);
     }
 
     @Override

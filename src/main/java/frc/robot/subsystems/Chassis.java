@@ -52,10 +52,6 @@ public class Chassis extends SubsystemBase {
         left.set(ControlMode.Velocity, leftt * Constants.PulsePerMeter / 10, DemandType.ArbitraryFeedForward, Constants.KV*Math.signum(leftt) + Constants.KS*leftt);
         right.set(ControlMode.Velocity, rightt * Constants.PulsePerMeter / 10, DemandType.ArbitraryFeedForward, Constants.KV*Math.signum(rightt) + Constants.KS*rightt);
     }
-
-    public void setVelocity(double velocity) {
-        setVelocity(velocity, velocity);
-    }
     
     public void stop() {
         setPower(0,0);
