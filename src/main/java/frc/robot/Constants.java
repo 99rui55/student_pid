@@ -14,7 +14,6 @@ import java.lang.Math;
  * constants are needed, to reduce verbosity.
  */
 public final class Constants {
-  public static class   ChassisConstants {
     public static final int LeftFrontMotor = 1;
     public static final int LeftBackMotor = 2;
     public static final int RightFrontMotor = 3;
@@ -27,11 +26,14 @@ public final class Constants {
     public static final double PulsePerRotation = 2048;
     public static final double PulsePerMeter = (1/WheelCircumference)*GearRatio*PulsePerRotation;
 
-    public static final double VelocityKP = 0.001;
-    public static final double VelocityKI = 0.0001;
-    public static final double VelocityKD = 0;
+    public static final double KP = 0.001;
+    public static final double KI = 0.0001;
+    public static final double KD = 0;
+    public static final double KS = 0;
+    public static final double KV = 0;
+    public static final double KA = 0;
+    
 
-  }
   public static class OperatorConstants {
     public static final int DriverControllerPort = 0;
   }

@@ -9,7 +9,7 @@ import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants.ChassisConstants;
+import frc.robot.Constants;
 
 
 public class Chassis extends SubsystemBase {
@@ -17,16 +17,16 @@ public class Chassis extends SubsystemBase {
     TalonFX left;
     TalonFX right;
 
-    TalonFX motorLF = new TalonFX(ChassisConstants.LeftFrontMotor);
-    TalonFX motorLB = new TalonFX(ChassisConstants.LeftBackMotor);
-    TalonFX motorRF = new TalonFX(ChassisConstants.RightFrontMotor);
-    TalonFX motorRB = new TalonFX(ChassisConstants.RightBackMotor);
+    TalonFX motorLF = new TalonFX(Constants.LeftFrontMotor);
+    TalonFX motorLB = new TalonFX(Constants.LeftBackMotor);
+    TalonFX motorRF = new TalonFX(Constants.RightFrontMotor);
+    TalonFX motorRB = new TalonFX(Constants.RightBackMotor);
     
 
     public Chassis() {
         super();
-        left = initMotors(ChassisConstants.LeftFrontMotor, ChassisConstants.LeftBackMotor, ChassisConstants.LeftInverted);
-        right = initMotors(ChassisConstants.RightFrontMotor, ChassisConstants.RightBackMotor, ChassisConstants.RightInverted);
+        left = initMotors(Constants.LeftFrontMotor, Constants.LeftBackMotor, Constants.LeftInverted);
+        right = initMotors(Constants.RightFrontMotor, Constants.RightBackMotor, Constants.RightInverted);
     
         SmartDashboard.putData("Chassis",this);
     }
@@ -37,7 +37,7 @@ public class Chassis extends SubsystemBase {
         main.setInverted(invert);
         follower.setInverted(invert);
         follower.follow(main);
-        setPID(main, ChassisConstants.VelocityKP, ChassisConstants.VelocityKI, ChassisConstants.VelocityKD);
+        setPID(main, Constants.KP, Constants.KI, Constants.KD);
         return main;
     }
 
@@ -47,11 +47,10 @@ public class Chassis extends SubsystemBase {
     }
 
     public void setVelocity(double leftt, double rightt) {
-        
         left.setIntegralAccumulator(0);
         right.setIntegralAccumulator(0);
-        left.set(ControlMode.Velocity, leftt * ChassisConstants.PulsePerMeter / 10, DemandType.ArbitraryFeedForward, ChassisConstants.KV*signum(leftt) + ChassisConstants.KS*leftt);
-        right.set(ControlMode.Velocity, rightt * ChassisConstants.PulsePerMeter / 10, DemandType.ArbitraryFeedForward, ChassisConstants.KV*signum(rightt) + ChassisConstants.KS*rightt);
+        left.set(ControlMode.Velocity, leftt * Constants.PulsePerMeter / 10, DemandType.ArbitraryFeedForward, Constants.KV*Math.signum(leftt) + Constants.KS*leftt);
+        right.set(ControlMode.Velocity, rightt * Constants.PulsePerMeter / 10, DemandType.ArbitraryFeedForward, Constants.KV*Math.signum(rightt) + Constants.KS*rightt);
     }
 
     public void setVelocity(double velocity) {
@@ -74,16 +73,16 @@ public class Chassis extends SubsystemBase {
     }
 
     public void setPID() { 
-        setPID(SmartDashboard.getNumber("Velocity KP", ChassisConstants.VelocityKP),
-                SmartDashboard.getNumber("Velocity KI", ChassisConstants.VelocityKI),
-                SmartDashboard.getNumber("Velocity KD", ChassisConstants.VelocityKD));
+        setPID(SmartDashboard.getNumber("Velocity KP", Constants.KP),
+                SmartDashboard.getNumber("Velocity KI", Constants.KI),
+                SmartDashboard.getNumber("Velocity KD", Constants.KD));
     }
 
     public double getLeftDistance() {
-        return left.getSelectedSensorPosition()/ChassisConstants.PulsePerMeter;
+        return left.getSelectedSensorPosition()/Constants.PulsePerMeter;
     }
     public double getRightDistance() {
-        return right.getSelectedSensorPosition()/ChassisConstants.PulsePerMeter;
+        return right.getSelectedSensorPosition()/Constants.PulsePerMeter;
     }
     public double getDistance() {
         return (getLeftDistance() + getRightDistance())/2;
@@ -121,9 +120,9 @@ public class Chassis extends SubsystemBase {
         builder.addDoubleProperty("Left Velocity", this::getLeftVelocity, null);
         builder.addDoubleProperty("Right Velocity", this::getRightVelocity, null);
         builder.addDoubleProperty("Velocity", this::getVelocity, null);
-        SmartDashboard.putNumber("Velocity KP", ChassisConstants.VelocityKP);
-        SmartDashboard.putNumber("Velocity KD", ChassisConstants.VelocityKD);
-        SmartDashboard.putNumber("Velocity KI", ChassisConstants.VelocityKI);
+        SmartDashboard.putNumber("Velocity KP", Constants.KP);
+        SmartDashboard.putNumber("Velocity KD", Constants.KD);
+        SmartDashboard.putNumber("Velocity KI", Constants.KI);
 
         InstantCommand cmdBrake = new InstantCommand(()-> brake(), this);
         SmartDashboard.putData("brake", cmdBrake.ignoringDisable(true));
@@ -133,7 +132,7 @@ public class Chassis extends SubsystemBase {
     }
 
     public static double TalonVelocityToVelocity(double velocity) {
-        return velocity * 10 / ChassisConstants.PulsePerMeter;
+        return velocity * 10 / Constants.PulsePerMeter;
     }
     
 }
