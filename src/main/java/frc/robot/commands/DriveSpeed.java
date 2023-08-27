@@ -6,6 +6,7 @@ package frc.robot.commands;
 
 import com.fasterxml.jackson.databind.deser.impl.ExternalTypeHandler.Builder;
 
+import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.util.sendable.Sendable;
 import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -32,7 +33,8 @@ public class DriveSpeed extends CommandBase implements Sendable {
     cycles = 0;
     double v = SmartDashboard.getNumber("wonted Velocity", 1.5);
     chassis.setvel(v, v);
-    
+  
+  
  
 }
 @Override

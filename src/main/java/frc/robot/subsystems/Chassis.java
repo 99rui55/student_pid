@@ -7,11 +7,13 @@ package frc.robot.subsystems;
 import java.sql.Wrapper;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.DemandType;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
 
 import com.ctre.phoenix.sensors.PigeonIMU;
 
+import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -19,6 +21,7 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.WrapperCommand;
 import frc.robot.Constants;
+import frc.robot.commands.DriveSpeed;
 
 public class Chassis extends SubsystemBase {
   private static TalonFX RFMotor;
@@ -26,6 +29,7 @@ public class Chassis extends SubsystemBase {
   private TalonFX DLMotor;
   private TalonFX LFMotor;
   private PigeonIMU gyro;
+  private SimpleMotorFeedforward feedforward;
   public double getRight() {
     double right1 = RFMotor.getSelectedSensorPosition();
     double right2 = DRMotor.getSelectedSensorPosition();
@@ -37,6 +41,7 @@ public class Chassis extends SubsystemBase {
     double left2 = LFMotor.getSelectedSensorPosition();
     double left = (left1 + left2)/2;
     return left;
+    
   }
 
 public double present(){
@@ -64,8 +69,11 @@ public Chassis() {
   DLMotor.config_kP(0, Constants.KP);
   DRMotor.config_kI(0, Constants.KI);
   DLMotor.config_kI(0, Constants.KI);
-  DRMotor.config_kD(0, Constants.KD);
-  DLMotor.config_kD(0, Constants.KD);
+  DRMotor.config_kD(0, Constants.KD); 
+  feedforward = new SimpleMotorFeedforward(Constants.KS, Constants.KV, Constants.KA);
+
+  
+
   SmartDashboard.putData("Chassis", this);
 }
   @Override
@@ -88,9 +96,12 @@ public Chassis() {
   public void setvel(double left, double right){
     DRMotor.setIntegralAccumulator(0);
     DLMotor.setIntegralAccumulator(0);
-    DRMotor.set(ControlMode.Velocity, right*Constants.PulsePerMeter/10);
-    DLMotor.set(ControlMode.Velocity, left*Constants.PulsePerMeter/10);
+    DRMotor.set(ControlMode.Velocity, right*Constants.PulsePerMeter/10, DemandType.ArbitraryFeedForward,
+    Constants.KS*Math.signum(right) + Constants.KV*right/12);
+    DLMotor.set(ControlMode.Velocity, left*Constants.PulsePerMeter/10, DemandType.ArbitraryFeedForward,
+    Constants.KS*Math.signum(left) + Constants.KV*left/12);
     System.out.println(" Set Velocitt " + left + "   " + right);
+    
   }
   public double getleftPower(){
     return LFMotor.getMotorOutputPercent();
@@ -134,7 +145,7 @@ public Chassis() {
       builder.addDoubleProperty("Left side power", this::getleftPower, null);
       builder.addDoubleProperty("Right side power", this::getRightPower, null);
       System.out.println(" Init Sendable Done");
-       
+      
     }
 
 }

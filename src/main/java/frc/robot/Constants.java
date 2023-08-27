@@ -21,8 +21,14 @@ public final class Constants {
   public static final double PulsePerMeter = 51330.602118456952386562826360143;
   public static final double KP = 0.005;
   public static final double KD = 0;
-  public static final double KI = 0.0005;
+  public static final double KI = 0.000;
+  public static final double KS = 0.02094;
+  public static final double KV = 1.3267;
+  public static final double KA = 0.098755;
   public static class OperatorConstants {
     public static final int kDriverControllerPort = 0;
+  }
+  public static class ChassisConstants {
+    public static final double ERROR_RANGE = 3; 
   }
 }
