@@ -1,6 +1,7 @@
 package frc.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.DemandType;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
 
@@ -8,7 +9,7 @@ import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import static frc.robot.Constants.ChassisConstants;
+import frc.robot.Constants.ChassisConstants;
 
 
 public class Chassis extends SubsystemBase {
@@ -30,7 +31,6 @@ public class Chassis extends SubsystemBase {
         SmartDashboard.putData("Chassis",this);
     }
 
-    // Init motors for one side
     private TalonFX initMotors(int mainn, int followerr, boolean invert) {
         TalonFX main = new TalonFX(mainn);
         TalonFX follower = new TalonFX(followerr);
@@ -47,12 +47,13 @@ public class Chassis extends SubsystemBase {
     }
 
     public void setVelocity(double leftt, double rightt) {
-        // input in meter per seconds
+        
         left.setIntegralAccumulator(0);
         right.setIntegralAccumulator(0);
-        left.set(ControlMode.Velocity, VelocityToTalonVelocity(leftt));
-        right.set(ControlMode.Velocity, VelocityToTalonVelocity(rightt));
+        left.set(ControlMode.Velocity, leftt * ChassisConstants.PulsePerMeter / 10, DemandType.ArbitraryFeedForward, ChassisConstants.KV*signum(leftt) + ChassisConstants.KS*leftt);
+        right.set(ControlMode.Velocity, rightt * ChassisConstants.PulsePerMeter / 10, DemandType.ArbitraryFeedForward, ChassisConstants.KV*signum(rightt) + ChassisConstants.KS*rightt);
     }
+
     public void setVelocity(double velocity) {
         setVelocity(velocity, velocity);
     }
@@ -78,7 +79,6 @@ public class Chassis extends SubsystemBase {
                 SmartDashboard.getNumber("Velocity KD", ChassisConstants.VelocityKD));
     }
 
-    // get functions
     public double getLeftDistance() {
         return left.getSelectedSensorPosition()/ChassisConstants.PulsePerMeter;
     }
@@ -132,15 +132,8 @@ public class Chassis extends SubsystemBase {
         SmartDashboard.putData("coast", cmdCoast.ignoringDisable(true));
     }
 
-
-    // utilities
     public static double TalonVelocityToVelocity(double velocity) {
         return velocity * 10 / ChassisConstants.PulsePerMeter;
     }
     
-    public static double VelocityToTalonVelocity(double velocity) {
-        return velocity * ChassisConstants.PulsePerMeter / 10;
-    }
-
-
 }

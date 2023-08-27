@@ -31,8 +31,6 @@ public final class Constants {
     public static final double VelocityKI = 0.0001;
     public static final double VelocityKD = 0;
 
-    public static final String AutoVelocityID = "Auto Velocity";
-
   }
   public static class OperatorConstants {
     public static final int DriverControllerPort = 0;
