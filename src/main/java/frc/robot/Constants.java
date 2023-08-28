@@ -5,6 +5,8 @@
 package frc.robot;
 
 import java.lang.Math;
+
+import javax.swing.JComboBox.KeySelectionManager;
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide numerical or boolean
  * constants. This class should not be used for any other purpose. All constants should be declared
@@ -19,8 +21,13 @@ public final class Constants {
     public static final int BackLeftMotor = 2;
     public static final int FrontRightMotor = 3;
     public static final int BackRightMotor = 3;
+    public static final int CountPerMeter = 51330;
     public static final boolean LeftInvert = true;
     public static final boolean RightInvert = false;
+
+    public static final double Ks = 0.0061182;
+    public static final double Kv = 0.64538;
+    public static final double Ka = 0.024367;
 
 
     public static final double WheelCirc = 6 * 0.0254 * Math.PI;
@@ -29,7 +36,7 @@ public final class Constants {
     public static final double PulsePerMeter = (1/WheelCirc)*GearRatio*PulsePerRotation;
 
     public static final double kP = 0.03;
-    public static final double kI = 0.003;
+    public static final double kI = 0;
     public static final double kD = 0;
 
   }
