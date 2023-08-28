@@ -8,6 +8,7 @@ import com.ctre.phoenix.sensors.PigeonIMU;
 
 import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.Constants;
 import frc.robot.subsystems.Chassis;
 
 public class MoveAndStay extends CommandBase{
@@ -16,19 +17,22 @@ public class MoveAndStay extends CommandBase{
   private double vl;
   PigeonIMU gyro = new PigeonIMU(14);
   private double startAngle;
-  /** Creates a new MoveForTime. */
-  public MoveAndStay(Chassis chassis, double vr, double vl) {
+  private double x;
+  double error = 0;
+  public MoveAndStay(Chassis chassis, double vr, double vl, double x) {
     addRequirements(chassis);
     this.chassis = chassis;
     this.vr = vr;
     this.vl = vl;
     this.startAngle = gyro.getFusedHeading();
+    this.x = x;
     // Use addRequirements() here to declare subsystem dependencies.
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+    chassis.setV(vr, vl);
     
   }
 
@@ -37,7 +41,7 @@ public class MoveAndStay extends CommandBase{
   public void execute() {
     double currentAngle = gyro.getFusedHeading();
     if(currentAngle > startAngle + 3){
-      chassis.setV(vr,-vl);
+      chassis.setV(vr,vl);
     }
     if(gyro.getFusedHeading() < startAngle - 3){
       chassis.setV(-vr,vl);
@@ -46,6 +50,7 @@ public class MoveAndStay extends CommandBase{
     if((gyro.getFusedHeading() <= startAngle + 3)&&(gyro.getFusedHeading() >= startAngle - 3)){
       chassis.setV(vr,vl);
     }
+    
   }
 
   // Called once the command ends or is interrupted.
@@ -57,6 +62,9 @@ public class MoveAndStay extends CommandBase{
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
+    if ((chassis.getRightPulses() - error)/Constants.pulsePerMeter >=x){
+      return true;
+    }
     return false;
   }
   @Override

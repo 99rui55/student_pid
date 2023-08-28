@@ -1,6 +1,7 @@
 package frc.robot.subsystems;
 
 
+import edu.wpi.first.math.controller.DifferentialDriveFeedforward;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -21,6 +22,7 @@ public class Chassis extends SubsystemBase {
     private TalonFX leftBkTalonFX;
     private TalonFX leftFrTalonFx;
     SimpleMotorFeedforward gg = new SimpleMotorFeedforward(Constants.ks, Constants.kv, Constants.ka);
+    DifferentialDriveFeedforward gg2 = new DifferentialDriveFeedforward(getRightMeters(), getLeftPulses(), getLeftPower(), getLeftMeters());
 
     
   /** Creates a new Chassis. */
@@ -111,8 +113,10 @@ public class Chassis extends SubsystemBase {
     return (leftBkTalonFX.getMotorOutputPercent() + leftFrTalonFx.getMotorOutputPercent())/2;
   }
 
-  public double getAngle(double angle){
-    return angle;
+  public double fixAngleRight(double r, double startAngle, double currentAngle){
+    double errorAngle = startAngle - currentAngle;
+    
+    return r;
   }
 
   public void setBrake(){
