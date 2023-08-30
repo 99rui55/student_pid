@@ -1,11 +1,13 @@
 package frc.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.DemandType;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.TalonFXControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import com.ctre.phoenix.sensors.PigeonIMU;
 
+import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
@@ -21,6 +23,7 @@ public class ChassisSubsystem extends SubsystemBase{
     TalonFX rightMotors;
     RobotContainer container;
     PigeonIMU gyro = new PigeonIMU(gyroId);
+    SimpleMotorFeedforward feedforward = new SimpleMotorFeedforward(Ks, Kv, Ka);
     private boolean brake = false;
     public ChassisSubsystem(RobotContainer container) {
         this.container = container;
@@ -48,9 +51,10 @@ public class ChassisSubsystem extends SubsystemBase{
     }
 
     public void setVelocity(double left, double right){
+        double lff = feedforward.calculate(left,0);
         leftMotors.setIntegralAccumulator(0);
         rightMotors.setIntegralAccumulator(0);
-        rightMotors.set(TalonFXControlMode.Velocity, VelocityToTalonVelocity(right));
+        rightMotors.set(TalonFXControlMode.Velocity, VelocityToTalonVelocity(right), DemandType.ArbitraryFeedForward, lff / 12);
         leftMotors.set(TalonFXControlMode.Velocity,VelocityToTalonVelocity(left));
     }
 

@@ -4,6 +4,7 @@
 
 package frc.robot;
 
+
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide numerical or boolean
  * constants. This class should not be used for any other purpose. All constants should be declared
@@ -31,9 +32,14 @@ public final class Constants {
     public static final int fixedAngleErrorRange = 3;
     
     // Velocity PID
-    public static final double VelocityKP = 100.0/5300.0;
-    public static final double VelocityKI = VelocityKP/10;
-    public static final double VelocityKD = VelocityKI/10;
+    public static final double VelocityKP = 50.0/5300.0;
+    public static final double VelocityKI = 0;//VelocityKP/10
+    public static final double VelocityKD = 0;//VelocityKI/10;
+
+    // FF
+    public static final double Ks = 0.0061182;
+    public static final double Kv = 0.64538;
+    public static final double Ka = 0.24367;
 
     public static class OperatorConstants {
       // Controller
