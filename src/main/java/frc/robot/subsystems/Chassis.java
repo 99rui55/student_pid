@@ -2,6 +2,7 @@ package frc.robot.subsystems;
 
 
 import edu.wpi.first.math.controller.DifferentialDriveFeedforward;
+import edu.wpi.first.math.controller.DifferentialDriveWheelVoltages;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -22,7 +23,7 @@ public class Chassis extends SubsystemBase {
     private TalonFX leftBkTalonFX;
     private TalonFX leftFrTalonFx;
     SimpleMotorFeedforward gg = new SimpleMotorFeedforward(Constants.ks, Constants.kv, Constants.ka);
-    DifferentialDriveFeedforward gg2 = new DifferentialDriveFeedforward(getRightMeters(), getLeftPulses(), getLeftPower(), getLeftMeters());
+    DifferentialDriveFeedforward gg2 = new DifferentialDriveFeedforward(Constants.kv, Constants.ka, Constants.kva, Constants.kaa, Constants.widthWheels);
 
     
   /** Creates a new Chassis. */
@@ -71,16 +72,22 @@ public class Chassis extends SubsystemBase {
     return leftBkTalonFX.getSelectedSensorPosition()
     /Constants.pulsePerMeter*10;
   }
-  public void setV(double vr, double vl){
-    double v1 = (vr*Constants.pulsePerMeter)/10;
-    rightBkTalonFX.setIntegralAccumulator(0);
-    double g = gg.calculate(vr);
-    rightBkTalonFX.set(ControlMode.Velocity,v1 , DemandType.ArbitraryFeedForward, g/12); 
-    double v2 = (vl*Constants.pulsePerMeter)/10;
-    leftBkTalonFX.setIntegralAccumulator(0);
-    double g2 = gg.calculate(vl);
-    leftBkTalonFX.set(ControlMode.Velocity,v2 , DemandType.ArbitraryFeedForward, g2/12); 
+  public void setV(double vl, double vr){
+    double v1 = (vl*Constants.pulsePerMeter)/10;
+    double v2 = (vr*Constants.pulsePerMeter)/10;
+    DifferentialDriveWheelVoltages volt = gg2.calculate(getVelocityL(), vl, getVelocityR(), vr, Constants.cicleTime);
+    rightBkTalonFX.set(ControlMode.Velocity,v2 , DemandType.ArbitraryFeedForward, volt.right/12);
+    leftBkTalonFX.set(ControlMode.Velocity,v1 , DemandType.ArbitraryFeedForward, volt.left/12);
   }
+  public void setV(double v){
+    double v1 = (v*Constants.pulsePerMeter)/10;
+    rightBkTalonFX.setIntegralAccumulator(0);
+    leftBkTalonFX.setIntegralAccumulator(0);
+    double g = gg.calculate(v);
+    rightBkTalonFX.set(ControlMode.Velocity,v1 , DemandType.ArbitraryFeedForward, g/12);
+    leftBkTalonFX.set(ControlMode.Velocity,v1 , DemandType.ArbitraryFeedForward, g/12);
+  }
+  
   
   @Override
   public void initSendable(SendableBuilder builder) {
@@ -91,6 +98,7 @@ public class Chassis extends SubsystemBase {
       builder.addDoubleProperty("VelocityL", this::getVelocityL, null);
       builder.addDoubleProperty("PowerR", this::getRightPower, null);
       builder.addDoubleProperty("PowerL", this::getLeftPower, null);
+      builder.addDoubleProperty("Velocity", null, this::setV);
   }
   
   public double getRightPulses(){
@@ -113,11 +121,6 @@ public class Chassis extends SubsystemBase {
     return (leftBkTalonFX.getMotorOutputPercent() + leftFrTalonFx.getMotorOutputPercent())/2;
   }
 
-  public double fixAngleRight(double r, double startAngle, double currentAngle){
-    double errorAngle = startAngle - currentAngle;
-    
-    return r;
-  }
 
   public void setBrake(){
     rightBkTalonFX.setNeutralMode(NeutralMode.Brake);

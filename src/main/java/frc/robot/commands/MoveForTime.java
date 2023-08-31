@@ -4,7 +4,6 @@
 
 package frc.robot.commands;
 
-import com.ctre.phoenix.sensors.PigeonIMU;
 
 import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj2.command.CommandBase;
@@ -12,22 +11,19 @@ import frc.robot.subsystems.Chassis;
 
 public class MoveForTime extends CommandBase{
   private Chassis chassis;
-  private double vr;
-  private double vl;
-  private double startAngle;
+  private double v;
   /** Creates a new MoveForTime. */
-  public MoveForTime(Chassis chassis, double vr, double vl) {
+  public MoveForTime(Chassis chassis, double v) {
     addRequirements(chassis);
     this.chassis = chassis;
-    this.vr = vr;
-    this.vl = vl;
+    this.v = v;
     // Use addRequirements() here to declare subsystem dependencies.
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    chassis.setV(vr,vl);
+    chassis.setV(v,v);
   }
 
   // Called every time the scheduler runs while the command is scheduled.

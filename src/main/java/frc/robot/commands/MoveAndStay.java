@@ -13,17 +13,15 @@ import frc.robot.subsystems.Chassis;
 
 public class MoveAndStay extends CommandBase{
   private Chassis chassis;
-  private double vr;
-  private double vl;
+  private double v;
   PigeonIMU gyro = new PigeonIMU(14);
   private double startAngle;
   private double x;
   double error = 0;
-  public MoveAndStay(Chassis chassis, double vr, double vl, double x) {
+  public MoveAndStay(Chassis chassis, double v, double x) {
     addRequirements(chassis);
     this.chassis = chassis;
-    this.vr = vr;
-    this.vl = vl;
+    this.v = v;
     this.startAngle = gyro.getFusedHeading();
     this.x = x;
     // Use addRequirements() here to declare subsystem dependencies.
@@ -32,7 +30,7 @@ public class MoveAndStay extends CommandBase{
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    chassis.setV(vr, vl);
+    chassis.setV(v, v);
     
   }
 
@@ -41,14 +39,14 @@ public class MoveAndStay extends CommandBase{
   public void execute() {
     double currentAngle = gyro.getFusedHeading();
     if(currentAngle > startAngle + 3){
-      chassis.setV(vr,vl);
+      chassis.setV(v,v-1);
     }
     if(gyro.getFusedHeading() < startAngle - 3){
-      chassis.setV(-vr,vl);
+      chassis.setV(v-1,v);
       
     }
     if((gyro.getFusedHeading() <= startAngle + 3)&&(gyro.getFusedHeading() >= startAngle - 3)){
-      chassis.setV(vr,vl);
+      chassis.setV(v,v);
     }
     
   }

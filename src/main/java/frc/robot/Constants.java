@@ -18,15 +18,20 @@ public final class Constants {
   public static final int leftFrontMotorID = 3;
   public static final int leftBackMotorID = 4;
 
+  public static final double widthWheels = 0.58;
+  public static final double cicleTime = 0.02;
+
   public static final double pulsePerMeter = 51339;
 
-  public static final double kp = 0.002;
+  public static final double kp = 0.417*1023/(12*5133);
   public static final double ki = 0.0000;
   public static final double kd = 0.00;
 
-  public static final double kv = 0.64538;
-  public static final double ka = 0.024367;
-  public static final double ks = 0.0061182;
+  public static final double kv = 2.84/12;
+  public static final double ka = 0.12/12;
+  public static final double ks = 0.3/12;
+  public static final double kva = 2.85/12;
+  public static final double kaa = 0.055/12;
   
   public static final double sp = 1.5;
 }
