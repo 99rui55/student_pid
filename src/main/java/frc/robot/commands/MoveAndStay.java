@@ -8,46 +8,36 @@ import com.ctre.phoenix.sensors.PigeonIMU;
 
 import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.Constants;
+import frc.robot.Util.Trapezoid;
 import frc.robot.subsystems.Chassis;
 
 public class MoveAndStay extends CommandBase{
   private Chassis chassis;
+  public Trapezoid trap;
+  private double targetDis;
   private double v;
-  PigeonIMU gyro = new PigeonIMU(14);
-  private double startAngle;
-  private double x;
-  double error = 0;
-  public MoveAndStay(Chassis chassis, double v, double x) {
+  public double a;
+  public MoveAndStay(Chassis chassis, double v, double a, double targetDis){
     addRequirements(chassis);
     this.chassis = chassis;
     this.v = v;
-    this.startAngle = gyro.getFusedHeading();
-    this.x = x;
+    this.targetDis = targetDis;
+    this.a = a;
+    trap = new Trapezoid(v, a);
     // Use addRequirements() here to declare subsystem dependencies.
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    chassis.setV(v, v);
-    
+    chassis.resetV();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    double currentAngle = gyro.getFusedHeading();
-    if(currentAngle > startAngle + 3){
-      chassis.setV(v,v-1);
-    }
-    if(gyro.getFusedHeading() < startAngle - 3){
-      chassis.setV(v-1,v);
-      
-    }
-    if((gyro.getFusedHeading() <= startAngle + 3)&&(gyro.getFusedHeading() >= startAngle - 3)){
-      chassis.setV(v,v);
-    }
+    double remainingDis = this.targetDis - chassis.getDis();
+    double vr = trap.calculate(remainingDis, chassis.getVelocityR(), v);
     
   }
 
@@ -60,9 +50,6 @@ public class MoveAndStay extends CommandBase{
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    if ((chassis.getRightPulses() - error)/Constants.pulsePerMeter >=x){
-      return true;
-    }
     return false;
   }
   @Override

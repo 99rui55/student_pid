@@ -21,7 +21,7 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
  */
 public class RobotContainer {
   public Chassis chassis = new Chassis();
-  MoveAndStay move1 = new MoveAndStay(chassis, Constants.sp, 2);
+ // MoveAndStay move1 = new MoveAndStay(chassis, Constants.sp, 2);
 
   // The robot's subsystems and commands are defined here...
   //private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
@@ -62,6 +62,7 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     // An example command will be run in autonomous
-    return move1;
+    //return move1;
+    return null;
   }
 }

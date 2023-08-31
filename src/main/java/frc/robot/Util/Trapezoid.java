@@ -10,20 +10,24 @@ import frc.robot.Constants;
 public class Trapezoid {
     private double maxV;
     private double maxA;
-    private double maxDis;
-    public Trapezoid(double maxV, double maxA, double maxDis){
+    public Trapezoid(double maxV, double maxA){
         this.maxA = maxA;
         this.maxV = maxV;
-        this.maxDis = maxDis;
     }
 
     public double calculate(double remainingDis, double currentV, double endV){
-        if((currentV<this.maxV)&&(remainingDis>neededDis(remainingDis)))
+        if((currentV<this.maxV)&&(remainingDis>neededDis())){
             return Math.min(currentV+this.maxA*Constants.cicleTime , this.maxV);
+        } else if(remainingDis>neededDis()){
+            return currentV;
+        }else if(currentV>endV){
+            return Math.min(currentV-this.maxA*Constants.cicleTime , endV);
+        }
+        return endV;
     }
     public double neededDis(){
-        double d1 = 
-        double d2 = this.maxDis - d1*2;
-        return this.maxDis
+        double t = this.maxV/this.maxA;
+        double d1 = 0.5*this.maxA*t*t;
+        return d1;
     }
 }

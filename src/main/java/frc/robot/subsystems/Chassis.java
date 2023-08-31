@@ -88,6 +88,10 @@ public class Chassis extends SubsystemBase {
     leftBkTalonFX.set(ControlMode.Velocity,v1 , DemandType.ArbitraryFeedForward, g/12);
   }
   
+  public void resetV(){
+    rightBkTalonFX.setIntegralAccumulator(0);
+    leftBkTalonFX.setIntegralAccumulator(0);
+  }
   
   @Override
   public void initSendable(SendableBuilder builder) {
@@ -106,6 +110,12 @@ public class Chassis extends SubsystemBase {
   }
   public double getLeftPulses(){
     return Math.abs((leftBkTalonFX.getSelectedSensorPosition()+leftFrTalonFx.getSelectedSensorPosition())/2);
+  }
+  public double getDis(){
+    double pulsePerRotation = 2048;
+    double gear = 12;
+    double spinPerMeter = 1/(0.15*Math.PI);
+    return getRightPulses()/pulsePerRotation/gear/spinPerMeter;
   }
 
   public double getRightMeters(){
