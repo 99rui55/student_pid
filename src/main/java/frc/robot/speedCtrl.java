@@ -27,7 +27,7 @@ public class speedCtrl {
     {
 
         //Acceleration according to cycle time and direction (backward, forward)
-        double acc = Math.signum(cVel) * maxAcc * OperatorConstants.cTime;
+        double acc = Math.signum(tgtVel - cVel) * maxAcc * OperatorConstants.cTime;
 
 
         //Make sure that the target vel does not exceed the max vel
@@ -38,21 +38,25 @@ public class speedCtrl {
         double nextV = cVel + acc;
 
         /*Check if the remaining distance in the next cycle (with the current vel plus acc)
-         will be enough for the robot to deaccelerate to the requested vel at the end   */
-        if(rD -  accDC(cVel) > accD(nextV, endVel))
+         will be enough for the robot to deaccelerate or accelerate to the requested vel at the end   */
+        if(rD -  accDC(cVel,endVel) > accD(nextV, endVel))
             //Check if the velocity in the next cycle doesn't exceed the target vel
-            if(Math.abs(nextV) < tgtVel)
+            if(Math.abs(nextV) < Math.abs(tgtVel))
                 //If the vel is less than the target vel, return the vel added with acc
                 return nextV;
             else
                 return tgtVel;
         else
         {
-            //Since there will be not enough distance to deaccelerate to the end vel in the next cycle
+            //Since there will be not enough distance to deaccelerate or accelerate to the end vel in the next cycle
             //(if we decided to keep the current vel).
-            //Then, the robot should deaccelerate beforehand.
-            nextV = cVel - acc;
-            return nextV;
+            //Then, the robot should deaccelerate or accelerate beforehand.
+            acc = Math.signum(endVel - cVel) * maxAcc * OperatorConstants.cTime;
+            nextV = cVel + acc;
+            if(Math.abs(nextV) < Math.abs(endVel))
+                return nextV;
+            else
+                return endVel;
         }
     }
 
@@ -82,9 +86,9 @@ public class speedCtrl {
      * @param cVel Current Velocity
      * @return The distance passed after one cycle, given the current velocity and the maximum acceleration.
      */
-    double accDC(double cVel)
+    double accDC(double cVel,double tgtVel)
     {
-        double acc = Math.signum(cVel) * maxAcc;
+        double acc = Math.signum(tgtVel - cVel) * maxAcc;
         return OperatorConstants.cTime * cVel + 0.5 * acc * Math.pow(OperatorConstants.cTime, 2);
     }
 
