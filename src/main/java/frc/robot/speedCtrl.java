@@ -51,9 +51,15 @@ public class speedCtrl {
             //Since there will be not enough distance to deaccelerate or accelerate to the end vel in the next cycle
             //(if we decided to keep the current vel).
             //Then, the robot should deaccelerate or accelerate beforehand.
+
+
             acc = Math.signum(endVel - cVel) * maxAcc * OperatorConstants.cTime;
             nextV = cVel + acc;
+
+            
             if(Math.abs(nextV) < Math.abs(endVel))
+                //If the vel in the next cycle (current vel with deacceleration or acceleration) does not exceed the end velocity,
+                //Let it continue accelerating or deacelerating
                 return nextV;
             else
                 return endVel;
