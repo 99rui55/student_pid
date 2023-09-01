@@ -16,8 +16,9 @@ public class KeepVelocityPID  extends CommandBase{
 
     @Override
     public void initialize() {
-        chassis.setVelocity(SmartDashboard.getNumber("Desired Velocity", 0));
+        chassis.setVelocity(SmartDashboard.getNumber("Final Desired Velocity", 1));
         chassis.setPID();
+        System.out.println("HI Bill! " + SmartDashboard.getNumber("Final Desired Velocity", 1));
     }
     
     @Override

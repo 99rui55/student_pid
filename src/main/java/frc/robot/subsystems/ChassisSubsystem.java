@@ -7,7 +7,9 @@ import com.ctre.phoenix.motorcontrol.TalonFXControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import com.ctre.phoenix.sensors.PigeonIMU;
 
-import edu.wpi.first.math.controller.SimpleMotorFeedforward;
+import edu.wpi.first.math.controller.DifferentialDriveFeedforward;
+import edu.wpi.first.math.controller.DifferentialDriveWheelVoltages;
+// import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
@@ -23,7 +25,8 @@ public class ChassisSubsystem extends SubsystemBase{
     TalonFX rightMotors;
     RobotContainer container;
     PigeonIMU gyro = new PigeonIMU(gyroId);
-    SimpleMotorFeedforward feedforward = new SimpleMotorFeedforward(Ks, Kv, Ka);
+    // SimpleMotorFeedforward feedforward = new SimpleMotorFeedforward(Ks, Kv, Ka);
+    DifferentialDriveFeedforward ff = new DifferentialDriveFeedforward(Kv, Ka, Kva, Kaa);
     private boolean brake = false;
     public ChassisSubsystem(RobotContainer container) {
         this.container = container;
@@ -51,11 +54,13 @@ public class ChassisSubsystem extends SubsystemBase{
     }
 
     public void setVelocity(double left, double right){
-        double lff = feedforward.calculate(left,0);
+        DifferentialDriveWheelVoltages volts = ff.calculate(getLeftVelocity(), left, getRightVelocity(), right, 0.02);
         leftMotors.setIntegralAccumulator(0);
         rightMotors.setIntegralAccumulator(0);
-        rightMotors.set(TalonFXControlMode.Velocity, VelocityToTalonVelocity(right), DemandType.ArbitraryFeedForward, lff / 12);
-        leftMotors.set(TalonFXControlMode.Velocity,VelocityToTalonVelocity(left));
+        double lff = (volts.left + Ks*Math.signum(left))/12;
+        double rff = (volts.right + Ks*Math.signum(right))/12;
+        rightMotors.set(TalonFXControlMode.Velocity, VelocityToTalonVelocity(right), DemandType.ArbitraryFeedForward, rff);
+        leftMotors.set(TalonFXControlMode.Velocity,VelocityToTalonVelocity(left), DemandType.ArbitraryFeedForward, lff);
     }
 
     public void setVelocity(double v) {
@@ -108,7 +113,7 @@ public class ChassisSubsystem extends SubsystemBase{
    @Override
     public void initSendable(SendableBuilder builder) {
         super.initSendable(builder);
-        SmartDashboard.putNumber("Desired Velocity", 0);
+        SmartDashboard.putNumber("Final Desired Velocity", 0);
         builder.addDoubleProperty("Left Distance", this::getLeftDistance, null);
         builder.addDoubleProperty("Right Distance", this::getRightDistance, null);
         builder.addDoubleProperty("Distance", this::getDistance, null);
@@ -122,7 +127,7 @@ public class ChassisSubsystem extends SubsystemBase{
         SmartDashboard.putNumber("Velocity KI", VelocityKI);
         SmartDashboard.putData("Brake", brakeCommand);
         SmartDashboard.putData("Coast", coastCommand );
-        builder.addBooleanProperty("Brake", this::getBrake, null);
+        builder.addBooleanProperty("BrakeStatus", this::getBrake, null);
     }
         
     // utilities
@@ -133,30 +138,23 @@ public class ChassisSubsystem extends SubsystemBase{
     public static double VelocityToTalonVelocity(double v) {
         return v * PulsePerMeter / 10;
     }
+
+    
     
     //Commands
-
-    CommandBase brakeCommand = new InstantCommand(() -> {
+    public void setBrake() {
         leftMotors.setNeutralMode(NeutralMode.Brake);
         rightMotors.setNeutralMode(NeutralMode.Brake);
         brake = true;
-    })
-    {
-        @Override
-        public boolean runsWhenDisabled() {
-            return true;
-        }
-    };
-
-    CommandBase coastCommand = new InstantCommand(() -> {
+        System.out.println("Braked");
+    }
+    CommandBase brakeCommand = new InstantCommand(this::setBrake).ignoringDisable(true);
+    
+    public void setCoast(){
         leftMotors.setNeutralMode(NeutralMode.Coast); 
         rightMotors.setNeutralMode(NeutralMode.Coast); 
         brake = false;
-    })
-    {
-        @Override
-        public boolean runsWhenDisabled() {
-            return true;
-        }
-    };
+        System.out.println("Coasted");
+    }
+    CommandBase coastCommand = new InstantCommand(this::setCoast).ignoringDisable(true);
 }

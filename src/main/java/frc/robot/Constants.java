@@ -37,10 +37,14 @@ public final class Constants {
     public static final double VelocityKD = 0;//VelocityKI/10;
 
     // FF
-    public static final double Ks = 0.0061182;
-    public static final double Kv = 0.64538;
-    public static final double Ka = 0.24367;
-
+    public static final double Ks = 0.3;
+    public static final double Kv = 2.84;
+    public static final double Ka = 0.12;
+    public static final double Kp = 0.006975;
+    public static final double Kva = 2.85;
+    public static final double Kaa = 0.55;
+    public static final double TW = 0.58;
+    
     public static class OperatorConstants {
       // Controller
       public static final int xboxControllerID = 0;
