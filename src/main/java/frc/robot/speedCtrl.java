@@ -66,13 +66,13 @@ public class speedCtrl {
     */
     double accD(double cVel,double tgtVel)
     {
-        double time = (tgtVel - cVel)/maxAcc;
         double acc;
         //Checking the direction of the acceleration (backward,forward)
         if(cVel > tgtVel)
             acc = -maxAcc;
         else
             acc = maxAcc;
+        double time = (tgtVel - cVel)/acc;
         
         return time * cVel + 0.5 * acc * Math.pow(time, 2);
     }
