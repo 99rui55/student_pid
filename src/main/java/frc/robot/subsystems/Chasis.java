@@ -205,12 +205,35 @@ public class Chasis extends SubsystemBase {
     return motors[i].getSelectedSensorPosition();
   }
 
+  public double getCountsM(int i)
+  {
+    return getCounts(i) / OperatorConstants.cPerM;
+  }
+
   public double getCountsL() {
     return motors[Constants.OperatorConstants.leftSide].getSelectedSensorPosition();
   }
 
   public double getCountsR() {
     return motors[Constants.OperatorConstants.rightSide].getSelectedSensorPosition();
+  }
+
+  public double getCountsLM() {
+    return getCountsL() / OperatorConstants.cPerM;
+  }
+
+  public double getCountsRM() {
+    return getCountsR() / OperatorConstants.cPerM;
+  }
+
+  public double getCountsAvg()
+  {
+    return (getCountsR() + getCountsL())/2;
+  }
+
+  public double getCountsAvgM()
+  {
+    return getCountsAvg() / OperatorConstants.cPerM;
   }
 
   @Override
@@ -222,9 +245,12 @@ public class Chasis extends SubsystemBase {
   public void initSendable(SendableBuilder builder) {
     builder.addDoubleProperty("Current mPs L", this::getSpeedL, null);
     builder.addDoubleProperty("Current mPs R", this::getSpeedR, null);
+    builder.addDoubleProperty("Current mPs R", this::getSpeedAvg, null);
 
     builder.addDoubleProperty("Counts L", this::getCountsL, null);
     builder.addDoubleProperty("Counts R", this::getCountsR, null);
+    builder.addDoubleProperty("Counts Avg", this::getCountsAvg, null);
+
   }
 
   public double getSpeedL() {
@@ -234,12 +260,12 @@ public class Chasis extends SubsystemBase {
   public double getSpeedR() {
     return (this.getCountsV(OperatorConstants.rightSide) * 10) / Constants.OperatorConstants.cPerM;
   }
-  public double getSpeed() {
+  public double getSpeedAvg() {
     return (getSpeedL() + getSpeedR())/2;
   }
 
   public void printVelocity() {
-    System.out.println("Velocity = " + getSpeed());
+    System.out.println("Velocity = " + getSpeedAvg());
   }
 
   public void brakes() {

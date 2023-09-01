@@ -1,21 +1,29 @@
 package frc.robot;
 
-import static frc.robot.Constants.OperatorConstants;
 
 import frc.robot.Constants.OperatorConstants;
 
-class speedCtrl {
+public class speedCtrl {
 
     double maxVel;
     double maxAcc;
 
-    speedCtrl(double maxVel, double maxAcc)
+    public speedCtrl(double maxVel, double maxAcc)
     {
         this.maxAcc = maxAcc;
         this.maxVel = maxVel;
     }
 
-    double calculate(double rD /**Remaining Distance*/,double cVel, double tgtVel, double endVel)
+    /**
+     * 
+     * @param rD - Remaining Distance
+     * @param cVel - Current Velocity
+     * @param tgtVel - Target Velocity
+     * @param endVel - End Velocity
+     * @return Returns the velocity needed in the current cycle in order to mantain a Trapzoid Motion Profile.
+     * According to the remaining distance, given the current velocity, target velocity, and end velocity.
+     */
+    public double calculate(double rD /**Remaining Distance*/,double cVel, double tgtVel, double endVel)
     {
 
         //Acceleration according to cycle time and direction (backward, forward)
@@ -48,6 +56,14 @@ class speedCtrl {
         }
     }
 
+   /**
+    * The distance required to accelerate from current velocity to a target velocity,
+    * given the maximum acceleration.
+    * @param cVel - Current Velocity
+    * @param tgtVel - Target Velocity
+    * @return The distance required to accelerate from current velocity to a target velocity,
+    * given the maximum acceleration.
+    */
     double accD(double cVel,double tgtVel)
     {
         double time = (tgtVel - cVel)/maxAcc;
@@ -61,6 +77,11 @@ class speedCtrl {
         return time * cVel + 0.5 * acc * Math.pow(time, 2);
     }
 
+    /**
+     * 
+     * @param cVel Current Velocity
+     * @return The distance passed after one cycle, given the current velocity and the maximum acceleration.
+     */
     double accDC(double cVel)
     {
         double acc = Math.signum(cVel) * maxAcc;

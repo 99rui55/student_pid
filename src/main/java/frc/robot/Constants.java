@@ -48,5 +48,8 @@ public final class Constants {
 
     public static final double cTime = 0.02;
 
+    //For str8D
+    public static final double kPAE = 0.05;
+
   }
 }
