@@ -5,6 +5,8 @@
 package frc.robot.subsystems;
 
 import edu.wpi.first.math.controller.DifferentialDriveFeedforward;
+import edu.wpi.first.math.controller.DifferentialDriveWheelVoltages;
+import edu.wpi.first.math.trajectory.constraint.DifferentialDriveVoltageConstraint;
 import edu.wpi.first.util.sendable.SendableBuilder;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
@@ -30,7 +32,7 @@ public class Chasis extends SubsystemBase {
   public Chasis(int... id) {
     super();
 
-    this.ddff = new DifferentialDriveFeedforward(OperatorConstants.kV, OperatorConstants.kA, 0.1,0.1);
+    this.ddff = new DifferentialDriveFeedforward(OperatorConstants.kV, OperatorConstants.kA, OperatorConstants.kVA,OperatorConstants.kAA);
 
     motors = new TalonFX[id.length];
     for (int i = 0; i < motors.length; i++) {
@@ -119,14 +121,30 @@ public class Chasis extends SubsystemBase {
 
   public void setRightV(double mPs) {
     motors[Constants.OperatorConstants.rightSide].setIntegralAccumulator(0);
-    motors[Constants.OperatorConstants.rightSide].set(ControlMode.Velocity,
-        (mPs * Constants.OperatorConstants.cPerM) / 10);
+    DifferentialDriveWheelVoltages volt =  ddff.calculate(
+    this.getSpeedL(),
+    this.getSpeedL(),
+    this.getSpeedR(),
+     mPs,
+     OperatorConstants.cTime);
+    
+    double pRight = (volt.right + OperatorConstants.kS*Math.signum(mPs))/OperatorConstants.maxVolt;
+    motors[OperatorConstants.rightSide].set(ControlMode.PercentOutput,pRight);
+    //motors[Constants.OperatorConstants.rightSide].set(ControlMode.Velocity,
+    //    (mPs * Constants.OperatorConstants.cPerM) / 10);
   }
 
   public void setLeftV(double mPs) {
-    TalonFX m = motors[Constants.OperatorConstants.leftSide];
-    m.setIntegralAccumulator(0);
-    m.set(ControlMode.Velocity, (mPs * Constants.OperatorConstants.cPerM) / 10);
+    motors[Constants.OperatorConstants.leftSide].setIntegralAccumulator(0);
+    DifferentialDriveWheelVoltages volt =  ddff.calculate(
+    this.getSpeedL(),
+    mPs,
+    this.getSpeedR(),
+    this.getSpeedR(),
+     OperatorConstants.cTime);
+    
+    double pLeft = (volt.left + OperatorConstants.kS*Math.signum(mPs))/OperatorConstants.maxVolt;
+    motors[OperatorConstants.rightSide].set(ControlMode.PercentOutput,pLeft);
   }
 
   public void setV(double mPs) {
@@ -137,20 +155,49 @@ public class Chasis extends SubsystemBase {
     //     (mPs * Constants.OperatorConstants.cPerM) / 10);
     // motors[Constants.OperatorConstants.rightSide].set(ControlMode.Velocity,
     //     (mPs * Constants.OperatorConstants.cPerM) / 10);
+    DifferentialDriveWheelVoltages volt =  ddff.calculate(
+    this.getSpeedL(),
+     mPs,
+    this.getSpeedR(),
+     mPs,
+     OperatorConstants.cTime);
+    
+    double pLeft = (volt.left + OperatorConstants.kS*Math.signum(mPs))/OperatorConstants.maxVolt;
+    double pRight = (volt.right + OperatorConstants.kS*Math.signum(mPs))/OperatorConstants.maxVolt;
+
+    motors[OperatorConstants.leftSide].set(ControlMode.PercentOutput,pLeft);
+    motors[OperatorConstants.rightSide].set(ControlMode.PercentOutput,pRight);
 
     
-    motors[OperatorConstants.rightSide].set(
-      ControlMode.Velocity,
-      mPs * OperatorConstants.cPerM,
-      DemandType.ArbitraryFeedForward,
-      (OperatorConstants.kS*Math.signum(mPs) + OperatorConstants.kV*mPs)/12);
-      
 
-    motors[OperatorConstants.leftSide].set(
-      ControlMode.Velocity,
-      mPs * OperatorConstants.cPerM,
-      DemandType.ArbitraryFeedForward,
-      (OperatorConstants.kS*Math.signum(mPs) + OperatorConstants.kV*mPs)/12);
+    // motors[OperatorConstants.leftSide].set(
+    //   ControlMode.Velocity,
+    //   mPs * OperatorConstants.cPerM,
+    //   DemandType.ArbitraryFeedForward,
+    //   (OperatorConstants.kS*Math.signum(mPs) + OperatorConstants.kV*mPs)/12);
+      
+  }
+
+  public void setV(double mPsLeft, double mPsRight) {
+    motors[OperatorConstants.leftSide].setIntegralAccumulator(0);
+    motors[OperatorConstants.rightSide].setIntegralAccumulator(0);
+
+    // motors[Constants.OperatorConstants.leftSide].set(ControlMode.Velocity,
+    //     (mPs * Constants.OperatorConstants.cPerM) / 10);
+    // motors[Constants.OperatorConstants.rightSide].set(ControlMode.Velocity,
+    //     (mPs * Constants.OperatorConstants.cPerM) / 10);
+    DifferentialDriveWheelVoltages volt =  ddff.calculate(
+    this.getSpeedL(),
+     mPsLeft,
+    this.getSpeedR(),
+     mPsRight,
+     OperatorConstants.cTime);
+    
+     double pLeft = (volt.left + OperatorConstants.kS*Math.signum(mPsLeft))/OperatorConstants.maxVolt;
+     double pRight = (volt.right + OperatorConstants.kS*Math.signum(mPsRight))/OperatorConstants.maxVolt;
+
+    motors[OperatorConstants.leftSide].set(ControlMode.PercentOutput,pLeft);
+    motors[OperatorConstants.rightSide].set(ControlMode.PercentOutput,pRight);
       
   }
 

@@ -7,8 +7,6 @@ package frc.robot.commands;
 import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.Constants;
-import frc.robot.Constants.OperatorConstants;
 import frc.robot.subsystems.*;
 
 public class sec3vel extends CommandBase {
@@ -46,9 +44,6 @@ public class sec3vel extends CommandBase {
     this.reqSpeed = reqSpeed;
   }
 
-  public double getSpeed() {
-    return (chasis.getCountsV(OperatorConstants.leftSide) * 10) / Constants.OperatorConstants.cPerM;
-  }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override

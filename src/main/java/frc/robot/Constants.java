@@ -14,6 +14,7 @@ package frc.robot;
  */
 public final class Constants {
   public static class OperatorConstants {
+    public static final double maxVolt = 12;
     public static final int kDriverControllerPort = 0;
     public static final double wheelCirc = 6*0.0254*Math.PI;
     public static final double GearRatio = 12;
@@ -34,8 +35,18 @@ public final class Constants {
     public static final int leftSide = 0;
     public static final int rightSide = 2;
 
-    public static final double kS = 0.00611;
-    public static final double kV = 0.6453;
-    public static final double kA = 0.0243;
+    //public static final double kS = 0.00611;
+
+    //kS, kV, kA, kAA, kVA are in volts
+    public static final double kS = 0.3;
+
+    public static final double kV = 2.84;
+    public static final double kA = 0.12;
+
+    public static final double kVA = 2.85;
+    public static final double kAA = 0.055;
+
+    public static final double cTime = 0.02;
+
   }
 }
