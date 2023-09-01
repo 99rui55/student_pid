@@ -40,8 +40,8 @@ public class speedCtrl {
         /*Check if the remaining distance in the next cycle (with the current vel plus acc)
          will be enough for the robot to deaccelerate to the requested vel at the end   */
         if(rD -  accDC(cVel) > accD(nextV, endVel))
-            //Check if current vel doesn't exceed the target vel
-            if(Math.abs(cVel) < tgtVel)
+            //Check if the velocity in the next cycle doesn't exceed the target vel
+            if(Math.abs(nextV) < tgtVel)
                 //If the vel is less than the target vel, return the vel added with acc
                 return nextV;
             else
