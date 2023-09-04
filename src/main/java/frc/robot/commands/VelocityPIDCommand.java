@@ -14,14 +14,14 @@ public class VelocityPIDCommand extends CommandBase {
 
     @Override
     public void initialize() {
-        double v = SmartDashboard.getNumber("Auto Velocity", 0.1);
+        double v = SmartDashboard.getNumber("Auto Velocity", 0.5);
         chassis.setPID();
-        chassis.setVelocity(v);
+        chassis.setVelocity(v,v);
     }
 
     @Override
     public void end(boolean interrupted) {
-        chassis.setVelocity(0);
+        chassis.setVelocity(0, 0);
     }
 
 }
