@@ -26,13 +26,15 @@ public final class Constants {
     public static final double PulsePerRotation = 2048;
     public static final double PulsePerMeter = (1/WheelCircumference)*GearRatio*PulsePerRotation;
 
-    public static final double KP = 0.005;
+    public static final double KP = 0.417 / 12;
     public static final double KI = 0.000;
     public static final double KD = 0;
-    public static final double KS = 0.02094;
-    public static final double KV = 1.3267;
-    public static final double KA = 0.098755;
-    
+    public static final double KS = 0.3 / 12;
+    public static final double KV =  2.54 / 12;
+    public static final double KA = 0.12 / 12;
+    public static final double KVA = 2.85 / 12;
+    public static final double KAA = 0.055 / 12;
+    public static final double TW = 0.58 / 12;
 
   public static class OperatorConstants {
     public static final int DriverControllerPort = 0;
