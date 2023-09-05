@@ -2,12 +2,14 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.commands.VelocityPIDCommand;
+import frc.robot.commands.udi;
 import frc.robot.subsystems.Chassis;
 
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   public final Chassis chassis;
   VelocityPIDCommand pid;
+  udi udi;
 
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -16,6 +18,7 @@ public class RobotContainer {
     chassis = new Chassis();
     configureBindings();
     pid = new VelocityPIDCommand(chassis);
+    udi = new udi(chassis, 2, 0.2, 0.05);
   }
 
   private void configureBindings() {
@@ -27,6 +30,6 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
-    return null;
+    return udi;
   }
 }

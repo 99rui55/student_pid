@@ -6,7 +6,6 @@ import frc.robot.Trapez;
 
 public class udi extends CommandBase{
   private Chassis chassis;
-  private double start;
   private double distance;
   private double Acceleration;
   private double velocity;
@@ -25,13 +24,13 @@ public class udi extends CommandBase{
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    start = chassis.getDistance();
+    distance = chassis.getDistance();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    distancleft = Math.abs(chassis.getDistance() - start);
+    distancleft = Math.abs(chassis.getDistance() - distance);
     velocity = Trapez.calculate(distancleft, chassis.getVelocity(), velocity );
     chassis.setVelocity(velocity, velocity);
   }
@@ -47,7 +46,7 @@ public class udi extends CommandBase{
   @Override
   public boolean isFinished(){
     
-    return (0.1 >= Math.abs(distance - distancleft) && Math.abs(chassis.getVelocity()) < 0.05);
+    return distancleft > 1;
     
  
   }
