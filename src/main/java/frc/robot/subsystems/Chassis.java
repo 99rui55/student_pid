@@ -1,10 +1,15 @@
 package frc.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.DemandType;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
 
+import edu.wpi.first.math.controller.DifferentialDriveFeedforward;
+import edu.wpi.first.math.controller.DifferentialDriveWheelVoltages;
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.util.sendable.SendableBuilder;
+import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -18,6 +23,9 @@ public class Chassis extends SubsystemBase {
 
     TalonFX rightMotor = new TalonFX(FrontRightMotor);
     TalonFX backRightMotor = new TalonFX(BackRightMotor);
+
+    
+    DifferentialDriveFeedforward feedforward = new DifferentialDriveFeedforward(Kv, Ka, Kva, Kaa, wheelWidth);
     
     RobotContainer container; // for future use
 
@@ -34,7 +42,7 @@ public class Chassis extends SubsystemBase {
         front.setInverted(invert);
         back.setInverted(invert);
         back.follow(front);
-        setPID(front, kP, kI,kD);
+        setPID(front, kP, kI, kD);
     }
 
     public double return0() {
@@ -47,14 +55,19 @@ public class Chassis extends SubsystemBase {
     }
 
     public void setVelocity(double l, double r) {
-        // input in meter per seconds
-        leftMotor.setIntegralAccumulator(0);
-        rightMotor.setIntegralAccumulator(0);
-        leftMotor.set(ControlMode.Velocity, toPulse(l));
-        rightMotor.set(ControlMode.Velocity, toPulse(r));
+        // double leftV = l*PulsePerMeter/10;
+        // double rightV = r*PulsePerMeter/10;
+        DifferentialDriveWheelVoltages voltages = feedforward.calculate(getLeftVelocity(), l, getRightVelocity(), r, circleTime);
+        leftMotor.set(ControlMode.Velocity, toPulse(l), DemandType.ArbitraryFeedForward, voltages.left / 12);
+        rightMotor.set(ControlMode.Velocity, toPulse(r), DemandType.ArbitraryFeedForward, voltages.right / 12);
     }
     public void setVelocity(double v) {
         setVelocity(v, v);
+    }
+
+    public void resetVelocity() {
+        leftMotor.setIntegralAccumulator(0);
+        rightMotor.setIntegralAccumulator(0);
     }
     
     public void setBrake() {
@@ -87,9 +100,14 @@ public class Chassis extends SubsystemBase {
     }
 
     public void setPID() { // read PID from network table
-    setPID(SmartDashboard.getNumber("Velocity KP", kP),
-    SmartDashboard.getNumber("Velocity KI", kI),
-                SmartDashboard.getNumber("Velocity KD", kD));
+    setPID(
+        SmartDashboard.getNumber("Velocity KP", kP),
+        SmartDashboard.getNumber("Velocity KI", kI),
+        SmartDashboard.getNumber("Velocity KD", kD));
+    }
+
+    public double calculate(double v, double a) {
+        return Ks + v*Kv + a*Ka;
     }
 
     // get functions
