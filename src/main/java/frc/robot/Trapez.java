@@ -6,14 +6,16 @@ package frc.robot;
 public class Trapez {
     private double maxAcceleration;
     private double maxVelocity;
+    private double time;
+    private double distance;
     public Trapez(double maxVelocity, double maxAcceleration){
         this.maxAcceleration = maxAcceleration;
         this.maxVelocity = maxVelocity;
     }
 
     public double ndistance(){
-        double time = maxVelocity/maxAcceleration;
-        double distance = 0.5*maxAcceleration*Math.pow(time,2);
+        time = maxVelocity/maxAcceleration;
+        distance = (maxAcceleration*Math.pow(time,2)/2);
         return distance;
     }
 
@@ -24,10 +26,9 @@ public class Trapez {
         else if(rdistance>ndistance()){
             return Velocity;
         }
-        else if(Velocity>endVelocity){
-            return Math.min(Velocity-maxAcceleration*0.02 , endVelocity);
+        else{
+            return Math.max(Velocity-maxAcceleration*0.02 , endVelocity);
         }
-        return endVelocity;
     }
     
 }
