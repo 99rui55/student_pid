@@ -113,7 +113,8 @@ public class ChassisSubsystem extends SubsystemBase{
    @Override
     public void initSendable(SendableBuilder builder) {
         super.initSendable(builder);
-        SmartDashboard.putNumber("Final Desired Velocity", 0);
+        //SmartDashboard.putNumber("Final Desired Velocity", 0);
+        SmartDashboard.putNumber("Desired distance", 0);
         builder.addDoubleProperty("Left Distance", this::getLeftDistance, null);
         builder.addDoubleProperty("Right Distance", this::getRightDistance, null);
         builder.addDoubleProperty("Distance", this::getDistance, null);
