@@ -4,9 +4,8 @@
 
 package frc.robot.commands;
 
-import com.ctre.phoenix.sensors.PigeonIMU;
-
 import edu.wpi.first.util.sendable.SendableBuilder;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Util.Trapezoid;
 import frc.robot.subsystems.Chassis;
@@ -15,30 +14,40 @@ public class MoveAndStay extends CommandBase{
   private Chassis chassis;
   public Trapezoid trap;
   private double targetDis;
-  private double v;
-  public double a;
-  public MoveAndStay(Chassis chassis, double v, double a, double targetDis){
+  public MoveAndStay(Chassis chassis, double targetDis){
     addRequirements(chassis);
     this.chassis = chassis;
-    this.v = v;
     this.targetDis = targetDis;
-    this.a = a;
-    trap = new Trapezoid(v, a);
     // Use addRequirements() here to declare subsystem dependencies.
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    chassis.resetV();
+    //chassis.resetV();
+    targetDis += chassis.getDis();
+    double maxV = SmartDashboard.getNumber("Max Velocity", 0.5);
+    double maxA = SmartDashboard.getNumber("Max Acceleration", 1);
+    trap = new Trapezoid(maxV, maxA);
+    System.out.println("maxV = "+ maxV);
+    System.out.println("maxA = "+ maxA);
+    
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
     double remainingDis = this.targetDis - chassis.getDis();
-    double vr = trap.calculate(remainingDis, chassis.getVelocityR(), v);
-    
+    double vr = trap.calculate(remainingDis, chassis.getVelocity(), 0);
+    double vl = trap.calculate(remainingDis, chassis.getVelocity(), 0);
+    chassis.setV(vl, vr);
+    System.out.println("velocityR= " + vl);
+    System.out.println("__________________________________");
+    System.out.println("velocityL= " + vr);
+    System.out.println("__________________________________");
+    System.out.println("remainingDis = "+ remainingDis);
+    System.out.println("__________________________________");
+    System.out.println("neededDis = "+ trap.neededDis());
   }
 
   // Called once the command ends or is interrupted.

@@ -21,7 +21,7 @@ public class Chassis extends SubsystemBase {
     private TalonFX rightFrTalonFX;
     private TalonFX rightBkTalonFX;
     private TalonFX leftBkTalonFX;
-    private TalonFX leftFrTalonFx;
+    private TalonFX leftFrTalonFX;
     SimpleMotorFeedforward gg = new SimpleMotorFeedforward(Constants.ks, Constants.kv, Constants.ka);
     DifferentialDriveFeedforward gg2 = new DifferentialDriveFeedforward(Constants.kv, Constants.ka, Constants.kva, Constants.kaa, Constants.widthWheels);
 
@@ -32,14 +32,16 @@ public class Chassis extends SubsystemBase {
     rightFrTalonFX = new TalonFX(Constants.rightFrontMotorID);
     rightBkTalonFX = new TalonFX(Constants.rightBackMotorID);
     leftBkTalonFX = new TalonFX(Constants.leftBackMotorID);
-    leftFrTalonFx = new TalonFX(Constants.leftFrontMotorID);
+    leftFrTalonFX = new TalonFX(Constants.leftFrontMotorID);
     
+    rightFrTalonFX.follow(rightBkTalonFX);
+    leftFrTalonFX.follow(leftBkTalonFX);
 
     rightFrTalonFX.setInverted(true);
     rightBkTalonFX.setInverted(true);
-
-    rightFrTalonFX.follow(rightBkTalonFX);
-    leftFrTalonFx.follow(leftBkTalonFX);
+    leftFrTalonFX.setInverted(false);
+    leftBkTalonFX.setInverted(false);
+    
 
     rightBkTalonFX.config_kP(0, Constants.kp);
     rightBkTalonFX.config_kI(0, Constants.ki);
@@ -61,7 +63,7 @@ public class Chassis extends SubsystemBase {
   public void setPower(double leftPower, double rightPower){
     rightFrTalonFX.set(ControlMode.PercentOutput, rightPower);
     rightBkTalonFX.set(ControlMode.PercentOutput, rightPower);
-    leftFrTalonFx.set(ControlMode.PercentOutput,leftPower);
+    leftFrTalonFX.set(ControlMode.PercentOutput,leftPower);
     leftBkTalonFX.set(ControlMode.PercentOutput, leftPower);
   }
   public double getVelocityR(){
@@ -69,15 +71,23 @@ public class Chassis extends SubsystemBase {
     /Constants.pulsePerMeter*10;
   }
   public double getVelocityL(){
-    return leftBkTalonFX.getSelectedSensorPosition()
+    return leftBkTalonFX.getSelectedSensorVelocity()
     /Constants.pulsePerMeter*10;
   }
+  public double getVelocity(){
+    return (getVelocityL()+getVelocityR())/2;
+  }
+
+
   public void setV(double vl, double vr){
     double v1 = (vl*Constants.pulsePerMeter)/10;
     double v2 = (vr*Constants.pulsePerMeter)/10;
     DifferentialDriveWheelVoltages volt = gg2.calculate(getVelocityL(), vl, getVelocityR(), vr, Constants.cicleTime);
-    rightBkTalonFX.set(ControlMode.Velocity,v2 , DemandType.ArbitraryFeedForward, volt.right/12);
-    leftBkTalonFX.set(ControlMode.Velocity,v1 , DemandType.ArbitraryFeedForward, volt.left/12);
+    System.out.println("_______ _________ _________ _________");
+    System.out.println("Volts = " + volt.right+"  "+volt.left);
+    System.out.println("_______ _________ _________ _________");
+    rightBkTalonFX.set(ControlMode.Velocity,v2 , DemandType.ArbitraryFeedForward, (Constants.ks*Math.signum(v2) + volt.right)/12);
+    leftBkTalonFX.set(ControlMode.Velocity,v1 , DemandType.ArbitraryFeedForward, (Constants.ks*Math.signum(v1) +volt.left)/12);
   }
   public void setV(double v){
     double v1 = (v*Constants.pulsePerMeter)/10;
@@ -102,14 +112,15 @@ public class Chassis extends SubsystemBase {
       builder.addDoubleProperty("VelocityL", this::getVelocityL, null);
       builder.addDoubleProperty("PowerR", this::getRightPower, null);
       builder.addDoubleProperty("PowerL", this::getLeftPower, null);
-      builder.addDoubleProperty("Velocity", null, this::setV);
+      SmartDashboard.putNumber("Max Velocity", 0);
+      SmartDashboard.putNumber("Max Acceleration", 0);
   }
   
   public double getRightPulses(){
     return Math.abs((rightBkTalonFX.getSelectedSensorPosition()+rightFrTalonFX.getSelectedSensorPosition())/2);
   }
   public double getLeftPulses(){
-    return Math.abs((leftBkTalonFX.getSelectedSensorPosition()+leftFrTalonFx.getSelectedSensorPosition())/2);
+    return Math.abs((leftBkTalonFX.getSelectedSensorPosition()+leftFrTalonFX.getSelectedSensorPosition())/2);
   }
   public double getDis(){
     double pulsePerRotation = 2048;
@@ -128,7 +139,7 @@ public class Chassis extends SubsystemBase {
     return (rightBkTalonFX.getMotorOutputPercent() + rightFrTalonFX.getMotorOutputPercent())/2;
   }
   public double getLeftPower(){
-    return (leftBkTalonFX.getMotorOutputPercent() + leftFrTalonFx.getMotorOutputPercent())/2;
+    return (leftBkTalonFX.getMotorOutputPercent() + leftFrTalonFX.getMotorOutputPercent())/2;
   }
 
 
@@ -136,13 +147,13 @@ public class Chassis extends SubsystemBase {
     rightBkTalonFX.setNeutralMode(NeutralMode.Brake);
     rightFrTalonFX.setNeutralMode(NeutralMode.Brake);
     leftBkTalonFX.setNeutralMode(NeutralMode.Brake);
-    leftFrTalonFx.setNeutralMode(NeutralMode.Brake);
+    leftFrTalonFX.setNeutralMode(NeutralMode.Brake);
   }
   public void setCoast(){
     rightBkTalonFX.setNeutralMode(NeutralMode.Coast);
     rightFrTalonFX.setNeutralMode(NeutralMode.Coast);
     leftBkTalonFX.setNeutralMode(NeutralMode.Coast);
-    leftFrTalonFx.setNeutralMode(NeutralMode.Coast);
+    leftFrTalonFX.setNeutralMode(NeutralMode.Coast);
   }
 
 

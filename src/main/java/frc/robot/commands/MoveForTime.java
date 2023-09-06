@@ -6,6 +6,7 @@ package frc.robot.commands;
 
 
 import edu.wpi.first.util.sendable.SendableBuilder;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Chassis;
 
@@ -13,16 +14,16 @@ public class MoveForTime extends CommandBase{
   private Chassis chassis;
   private double v;
   /** Creates a new MoveForTime. */
-  public MoveForTime(Chassis chassis, double v) {
+  public MoveForTime(Chassis chassis) {
     addRequirements(chassis);
     this.chassis = chassis;
-    this.v = v;
     // Use addRequirements() here to declare subsystem dependencies.
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+    double v = SmartDashboard.getNumber("Max Velocity", 0.5);
     chassis.setV(v,v);
   }
 

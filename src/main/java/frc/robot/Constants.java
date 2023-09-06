@@ -23,15 +23,16 @@ public final class Constants {
 
   public static final double pulsePerMeter = 51339;
 
-  public static final double kp = 0.417*1023/(12*5133);
+  //public static final double kp = 0.417*1023/(12*5133);
+  public static final double kp = 0.1;
   public static final double ki = 0.0000;
   public static final double kd = 0.00;
 
-  public static final double kv = 2.84/12;
-  public static final double ka = 0.12/12;
-  public static final double ks = 0.3/12;
-  public static final double kva = 2.85/12;
-  public static final double kaa = 0.055/12;
+  public static final double kv = 2.84;
+  public static final double ka = 0.12;
+  public static final double ks = 0.3;
+  public static final double kva = 2.85;
+  public static final double kaa = 0.055;
   
   public static final double sp = 1.5;
 }
