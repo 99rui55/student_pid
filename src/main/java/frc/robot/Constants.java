@@ -14,6 +14,9 @@ package frc.robot;
  * constants are needed, to reduce verbosity.
  */
 public final class Constants {
+  public static class GeneralConstants{
+    public static final double cycleTime = 0.02;
+  }
   public static class ChassisConstants{
     // Motors
     public static final int rightFrontMotorID = 1;
@@ -45,12 +48,12 @@ public final class Constants {
     public static final double Kaa = 0.55;
     public static final double TW = 0.58;
     
-    public static class OperatorConstants {
-      // Controller
-      public static final int xboxControllerID = 0;
-      public static final double deadbandValue = 0.1;
-    }
+  public static class OperatorConstants {
+    // Controller
+    public static final int xboxControllerID = 0;
+    public static final double deadbandValue = 0.1;
   }
+}
 
 
 
