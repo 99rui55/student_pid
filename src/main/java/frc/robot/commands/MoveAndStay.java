@@ -41,11 +41,16 @@ public class MoveAndStay extends CommandBase{
     double vr = trap.calculate(remainingDis, chassis.getVelocity(), 0);
     double vl = trap.calculate(remainingDis, chassis.getVelocity(), 0);
     chassis.setV(vl, vr);
-    System.out.println("velocityR= " + vl);
+    System.out.println("velocityL= " + vl);
+    System.out.println("velocityL= " + chassis.getVelocityL());
     System.out.println("__________________________________");
-    System.out.println("velocityL= " + vr);
+    System.out.println("velocityR= " + vr);
+    System.out.println("velocityR= " + chassis.getVelocityR());
     System.out.println("__________________________________");
+    System.out.println("velocity= " + chassis.getVelocity());
     System.out.println("remainingDis = "+ remainingDis);
+    System.out.println("dis =  "+ chassis.getDis());
+    System.out.println("targetdis = "+ this.targetDis);
     System.out.println("__________________________________");
     System.out.println("neededDis = "+ trap.neededDis());
   }

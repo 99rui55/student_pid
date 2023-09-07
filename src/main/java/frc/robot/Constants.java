@@ -19,7 +19,7 @@ public final class Constants {
   public static final int leftBackMotorID = 4;
 
   public static final double widthWheels = 0.58;
-  public static final double cicleTime = 0.02;
+  public static final double cycleTime = 0.02;
 
   public static final double pulsePerMeter = 51339;
 

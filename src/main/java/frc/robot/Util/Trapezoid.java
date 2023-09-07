@@ -19,16 +19,16 @@ public class Trapezoid {
     public double calculate(double remainingDis, double currentV, double endV) {
         if ((currentV < this.maxV) && (remainingDis > neededDis())) {
             System.out.println("true1--------");
-            return Math.min(currentV + this.maxA * Constants.cicleTime, this.maxV);
+            return Math.min(currentV + this.maxA * Constants.cycleTime, this.maxV);
         } else if (remainingDis >= neededDis()) {
             System.out.println("true2--------");
             return this.maxV;
         } else if (currentV > endV) {
             System.out.println("true3--------");
-            System.out.println(this.maxA * Constants.cicleTime);
-            System.out.println(currentV - this.maxA * Constants.cicleTime);
+            System.out.println(this.maxA * Constants.cycleTime);
+            System.out.println(currentV - this.maxA * Constants.cycleTime);
             //return 0;
-            return Math.max(currentV - this.maxA * Constants.cicleTime, endV);
+            return Math.max(currentV - this.maxA * Constants.cycleTime, endV);
         }
         System.out.println("true4--------");
         return endV;
