@@ -11,11 +11,14 @@ public class udi extends CommandBase{
   private double velocity;
   private Trapez Trapez;
   private double distancleft;
+  private double rotation;
+  private double nowrotation;
   public udi(Chassis chassis, double distance, double velocity, double Acceleration){
     this.chassis = chassis;
     this.distance = distance;
     this.velocity = velocity;
     this.Acceleration = Acceleration;
+    this.rotation = rotation;
     Trapez = new Trapez(velocity, Acceleration);
     addRequirements(chassis);
 
@@ -25,14 +28,16 @@ public class udi extends CommandBase{
   @Override
   public void initialize() {
     distance = chassis.getDistance();
+    rotation = chassis.getrotation();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
     distancleft = Math.abs(chassis.getDistance() - distance);
+    nowrotation = chassis.getrotation() - rotation;
     velocity = Trapez.calculate(distancleft, chassis.getVelocity(), 0 );
-    chassis.setVelocity(velocity, velocity);
+    chassis.setVelocity(velocity, velocity + nowrotation);
   }
 
   // Called once the command ends or is interrupted.
