@@ -31,7 +31,7 @@ public class udi extends CommandBase{
   @Override
   public void execute() {
     distancleft = Math.abs(chassis.getDistance() - distance);
-    velocity = Trapez.calculate(distancleft, chassis.getVelocity(), velocity );
+    velocity = Trapez.calculate(distancleft, chassis.getVelocity(), 0 );
     chassis.setVelocity(velocity, velocity);
   }
 
