@@ -17,15 +17,7 @@ public class DriveAuto extends CommandBase {
   }
 
   @Override
-  public void execute() {}
-
-  @Override
   public void end(boolean interrupted) {
-    
-  }
-
-  @Override
-  public boolean isFinished() {
-    return false;
+    chassis.setPower(0, 0);
   }
 }
