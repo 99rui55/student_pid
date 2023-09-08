@@ -7,8 +7,11 @@ import com.ctre.phoenix.sensors.PigeonIMU;
 
 import edu.wpi.first.math.controller.DifferentialDriveFeedforward;
 import edu.wpi.first.math.controller.DifferentialDriveWheelVoltages;
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.DifferentialDriveOdometry;
+import edu.wpi.first.util.sendable.SendableBuilder;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.utils.TalonFXGroup;
@@ -29,6 +32,12 @@ public class Chassis extends SubsystemBase {
 
   public Chassis() {
     rightMotors.setInverted(true);
+    SmartDashboard.putData(this); 
+  }
+
+  @Override
+  public void initSendable(SendableBuilder builder) {
+      builder.addDoubleProperty("Velocity", this::getRightVelocity, null);
   }
 
   public void setPID(double p) {
@@ -73,6 +82,10 @@ public class Chassis extends SubsystemBase {
 
   public double getRightVelocity() {
     return rightMotors.getSelectedSensorVelocity();
+  }
+
+  public Pose2d getPose() {
+    return odometry.getPoseMeters();
   }
 
   @Override
