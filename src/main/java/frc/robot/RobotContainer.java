@@ -5,18 +5,19 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.commands.TrapeziodCommand;
+import frc.robot.commands.TrapezoidCommand;
 import frc.robot.subsystems.Chassis;
 
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   public final Chassis chassis;
+  public double meter;
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     chassis = new Chassis();
     configurBindings();
-   
+    meter = 3;
   }
 
   
@@ -32,7 +33,7 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
-    return new TrapeziodCommand(0, chassis);
+    return new TrapezoidCommand(chassis, meter);
     // return null;
   }
 }
