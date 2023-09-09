@@ -60,7 +60,7 @@ public class TrapezoidCommand extends CommandBase {
     return false;
   }
 
-  
+  private String getTrapezoidState(){ return trapezoid.state; }
   private double getRemainingDis(){ return remainingDis; }
   private double getNeededDis(){ return trapezoid.neededDis; }
   private double getTime(){ return trapezoid.time; }
@@ -68,6 +68,7 @@ public class TrapezoidCommand extends CommandBase {
   public void initSendable (SendableBuilder builder){
     super.initSendable(builder);
 
+    builder.addStringProperty("Trapezoid State", this::getTrapezoidState, null);
     builder.addDoubleProperty("Remaining Distence", this::getRemainingDis, null);
     builder.addDoubleProperty("Needed Distence", this::getNeededDis, null);
     builder.addDoubleProperty("Time", this::getTime, null);
