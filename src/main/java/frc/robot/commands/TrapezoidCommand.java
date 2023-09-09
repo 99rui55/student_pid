@@ -12,6 +12,7 @@ import frc.robot.Utils.Trapezoid;
 import frc.robot.subsystems.Chassis;
 
 public class TrapezoidCommand extends CommandBase {
+  
   Chassis chassis;
   Trapezoid trapezoid;
   double distence;
@@ -36,6 +37,7 @@ public class TrapezoidCommand extends CommandBase {
     // endVel = SmartDashboard.getNumber("endVel", 0); 
     endVel = 0;
 
+    // set up the var
     maxVel = SmartDashboard.getNumber("Max Velocity", 0.5);
     maxAcc = SmartDashboard.getNumber("Max Acceleration", 1);
     distence += chassis.getDistance();
@@ -45,6 +47,7 @@ public class TrapezoidCommand extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+    // caculate the velocity needed from the trapezoid caculator
     remainingDis = distence - chassis.getDistance();
     vel = trapezoid.calculate(remainingDis, chassis.getVelocity(), endVel);
     chassis.setVelocity(vel, vel);
@@ -52,7 +55,9 @@ public class TrapezoidCommand extends CommandBase {
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) { chassis.stop(); }
+  public void end(boolean interrupted) { 
+    chassis.stop(); 
+  }
 
   // Returns true when the command should end.
   @Override
@@ -60,14 +65,18 @@ public class TrapezoidCommand extends CommandBase {
     return false;
   }
 
+  // getting to the smart dashboard all of the changing vars
   private String getTrapezoidState(){ return trapezoid.state; }
   private double getRemainingDis(){ return remainingDis; }
+  // getting this vars to the smart dashboard to check if they work correctly
   private double getNeededDis(){ return trapezoid.neededDis; }
   private double getTime(){ return trapezoid.time; }
 
+  @Override
   public void initSendable (SendableBuilder builder){
     super.initSendable(builder);
 
+    //add the properties
     builder.addStringProperty("Trapezoid State", this::getTrapezoidState, null);
     builder.addDoubleProperty("Remaining Distence", this::getRemainingDis, null);
     builder.addDoubleProperty("Needed Distence", this::getNeededDis, null);
