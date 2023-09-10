@@ -20,13 +20,13 @@ public class Trapezoid {
         state = "prepare for trapezoid / error";
     }
 
-    public double calculate(double remainingDis, double currentV, double endV) {
+    public double calculate(double remainingDis, double currentVel, double endVel) {
 
-        if ((currentV < maxVel) && (remainingDis > neededDis)) {
+        if ((currentVel < maxVel) && (remainingDis > neededDis)) {
             // when the velocity of the chassis is less than the max and there is place to increase the speed
             // return the increased velocity or the max velocity if we closer to that
             state = "phase 1 - accelaration";
-            return Math.min(currentV + maxAcc, maxVel);
+            return Math.min(currentVel + maxAcc, maxVel);
 
         } else if (remainingDis >= neededDis) {
             // when the remining distence is bigger or worth the needed distence and the velocity is the max velocity
@@ -34,17 +34,17 @@ public class Trapezoid {
             state = "phase 2 - max veloicty";
             return maxVel;
 
-        } else if (currentV > endV) {
+        } else if (currentVel > endVel) {
             // when the distence is already at the third phase at the decreasing velocity phase
             // return the decreased velocity or the end velocity if we closer to that
             state = "phase 3 - deceleration";
-            return Math.max(currentV - maxAcc, endV);
+            return Math.max(currentVel - maxAcc, endVel);
 
         } else{
             // when we at the end of the trapezoid we only use the end velocity so we
             // return the end velocity
             state = "out of trapezoid / error";
-            return endV;
+            return endVel;
         }
     }
 }
