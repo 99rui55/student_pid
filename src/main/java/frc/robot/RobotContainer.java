@@ -5,6 +5,7 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.commands.MoveTrapezoid;
 import frc.robot.commands.VelocityPIDCommand;
 import frc.robot.subsystems.Chassis;
 
@@ -27,6 +28,7 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
-      return new VelocityPIDCommand(chassis).withTimeout(3);
+      // return new VelocityPIDCommand(chassis).withTimeout(3);
+      return new MoveTrapezoid(chassis);
   }
 }
