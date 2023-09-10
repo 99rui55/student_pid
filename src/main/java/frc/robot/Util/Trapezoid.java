@@ -2,33 +2,39 @@ package frc.robot.Util;
 
 import static frc.robot.Constants.ChassisConstants.*;
 
+import frc.robot.subsystems.Chassis;
+
 public class Trapezoid {
 
-    private double maxV;
-    private double maxA;
+    private double maxV, maxA, remainingDistance, endV, distanceTraveled = 0;
+    private boolean first = true;
 
-    public Trapezoid(double maxV, double maxA){
-        this.maxA = maxA;
+    public Trapezoid(double maxV, double maxA, double remainingDistance, double endV){
         this.maxV = maxV;
+        this.maxA = maxA;
+        this.remainingDistance = remainingDistance;
+        this.endV = endV;
+
     }
 
     public double calculate(double remainingDistance, double currentV, double endV) {
-        if (velocity_after_accel(currentV) <= maxV && distToVel(velocity_after_accel(currentV), endV, maxA) <= remainingDistance) {  // Can I accelerate?
-            return velocity_after_accel(currentV); // if not at max speed AND can stop on time, then accelerate
+        if (first) return accelerate(currentV);
+        if (accelerate(currentV) <= maxV && distToVel(accelerate(currentV), endV, maxA) <= remainingDistance) {  // Can I accelerate?
+            return accelerate(currentV); // if not at max speed AND can stop on time, then accelerate
         }
-        else if (distToVel(velocity_after_accel(currentV), endV, maxA) <= remainingDistance) { 
+        else if (distToVel(accelerate(currentV), endV, maxA) <= remainingDistance) { 
             return maxV; // if can stop on time AND at max speed, then keep maxV
         }
         else { // else (if cant stop on time, assuming i accelerate), then deccelerate
-            return velocity_after_deccel(currentV);
+            return deccelerate(currentV);
         }
     }
 
-    public double velocity_after_accel(double currentV) {
+    public double accelerate(double currentV) {
         return (currentV + maxA * circleTime);
     }
-
-    public double velocity_after_deccel(double currentV) {
+    
+    public double deccelerate(double currentV) {
         return (currentV + (-maxA) * circleTime);
     }
 

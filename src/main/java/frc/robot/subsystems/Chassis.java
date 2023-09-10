@@ -15,6 +15,7 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import static frc.robot.Constants.ChassisConstants.*;
 import frc.robot.RobotContainer;
+import frc.robot.Util.Trapezoid;
 
 public class Chassis extends SubsystemBase {
 
