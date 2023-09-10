@@ -28,21 +28,21 @@ public class TrapezoidCommand extends CommandBase {
     this.chassis = chassis;
     this.distence = distence * Constants.PulsePerMeter;
     addRequirements(chassis);
-    SmartDashboard.putData(this);
   }
-
+  
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
     // for future use: 
     // endVel = SmartDashboard.getNumber("endVel", 0); 
     endVel = 0;
-
+    
     // set up the var
     maxVel = SmartDashboard.getNumber("Max Velocity", 0.5);
     maxAcc = SmartDashboard.getNumber("Max Acceleration", 1);
     distence += chassis.getDistance();
     trapezoid = new Trapezoid(maxVel, maxAcc);
+    SmartDashboard.putData(this);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -69,9 +69,6 @@ public class TrapezoidCommand extends CommandBase {
   // getting to the smart dashboard all of the changing vars
   private String getTrapezoidState(){ return trapezoid.state; }
   private double getRemainingDis(){ return remainingDis; }
-  // getting this vars to the smart dashboard to check if they work correctly
-  private double getNeededDis(){ return trapezoid.neededDis; }
-  private double getTime(){ return trapezoid.time; }
 
   @Override
   public void initSendable (SendableBuilder builder){
@@ -80,8 +77,8 @@ public class TrapezoidCommand extends CommandBase {
     //add the properties
     builder.addStringProperty("Trapezoid State", this::getTrapezoidState, null);
     builder.addDoubleProperty("Remaining Distence", this::getRemainingDis, null);
-    builder.addDoubleProperty("Needed Distence", this::getNeededDis, null);
-    builder.addDoubleProperty("Time", this::getTime, null);
+    SmartDashboard.putNumber("Needed Distence", trapezoid.neededDis);
+    SmartDashboard.putNumber("Time", trapezoid.time);
 
   }
 
