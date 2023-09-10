@@ -36,6 +36,7 @@ public final class Constants {
     public static final double KAA = 0.055 / 12;
     public static final double TW = 0.58 / 12;
 
+    public static final double cycleTime = 0.02;
   public static class OperatorConstants {
     public static final int DriverControllerPort = 0;
   }

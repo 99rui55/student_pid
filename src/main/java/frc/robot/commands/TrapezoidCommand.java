@@ -28,6 +28,7 @@ public class TrapezoidCommand extends CommandBase {
     this.chassis = chassis;
     this.distence = distence * Constants.PulsePerMeter;
     addRequirements(chassis);
+    SmartDashboard.putData(this);
   }
 
   // Called when the command is initially scheduled.
@@ -81,5 +82,7 @@ public class TrapezoidCommand extends CommandBase {
     builder.addDoubleProperty("Remaining Distence", this::getRemainingDis, null);
     builder.addDoubleProperty("Needed Distence", this::getNeededDis, null);
     builder.addDoubleProperty("Time", this::getTime, null);
+
   }
+
 }

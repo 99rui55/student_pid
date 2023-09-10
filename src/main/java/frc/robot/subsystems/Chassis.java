@@ -31,7 +31,7 @@ public class Chassis extends SubsystemBase {
         left = initMotors(Constants.LeftFrontMotor, Constants.LeftBackMotor, Constants.LeftInverted);
         right = initMotors(Constants.RightFrontMotor, Constants.RightBackMotor, Constants.RightInverted);
     
-        SmartDashboard.putData("Chassis",this);
+        SmartDashboard.putData(this);
     }
 
     private TalonFX initMotors(int mainMotor, int followerMotor, boolean invert) {
@@ -133,5 +133,4 @@ public class Chassis extends SubsystemBase {
         InstantCommand cmdCoast = new InstantCommand(()-> coast(), this);
         SmartDashboard.putData("coast", cmdCoast.ignoringDisable(true));
     }
-    
 }
