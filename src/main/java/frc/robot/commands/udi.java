@@ -6,50 +6,51 @@ import frc.robot.Trapez;
 
 public class udi extends CommandBase{
   private Chassis chassis;
-  private double distance;
-  private double Acceleration;
-  private double velocity;
-  private Trapez Trapez;
-  private double distancleft;
-  private double rotation;
-  private double nowrotation;
-  public udi(Chassis chassis, double distance, double velocity, double Acceleration){
-    this.chassis = chassis;
-    this.distance = distance;
-    this.velocity = velocity;
-    this.Acceleration = Acceleration;
-    this.rotation = rotation;
-    Trapez = new Trapez(velocity, Acceleration);
-    addRequirements(chassis);
+    Trapez Trapez;
+    private double distance;
+    private double direction;
+    private double heading = 0;
+    private double startDistance = 0;
+    private double remainingDistance = 0;
 
-  }
-  
-  // Called when the command is initially scheduled.
-  @Override
-  public void initialize() {
-    distance = chassis.getDistance();
-    rotation = chassis.getrotation();
-  }
+    private final double headingKP = 0.1;
 
-  // Called every time the scheduler runs while the command is scheduled.
-  @Override
-  public void execute() {
-    distancleft = Math.abs(chassis.getDistance() - distance);
-    nowrotation = chassis.getrotation() - rotation;
-    velocity = Trapez.calculate(distancleft, chassis.getVelocity(), 0 );
-    chassis.setVelocity(velocity, velocity + nowrotation);
-  }
+    public udi(double distance, double velocity, double maxAcceleration, Chassis chassis) {
+        super();
+        this.chassis = chassis;
+        this.distance = distance;
+        direction = Math.signum(distance);
+        Trapez = new Trapez(velocity, maxAcceleration);
+        addRequirements(chassis);
+    }
 
-  // Called once the command ends or is interrupted.
-  @Override
-  public void end(boolean interrupted) {
-    chassis.setVelocity(0, 0);
-    
-  }
+    @Override
+    public void initialize() {
+        heading = chassis.getrotation();
+        startDistance = chassis.getDistance();
+    }
 
-  // Returns true when the command should end.
-  @Override
-  public boolean isFinished(){
-    return false;
-  }
+    @Override
+    public void execute() {
+        double curentVelocity = chassis.getVelocity();
+        double headingError = chassis.getrotation() - heading;
+        remainingDistance = remainingDistance();
+        double tgtVel = Trapez.calculate(remainingDistance, curentVelocity, 0) * direction;
+        chassis.setVelocity(tgtVel + headingError * headingKP, tgtVel - headingError * headingKP);
+    }
+
+    private double remainingDistance() {
+        return direction*(distance + startDistance - chassis.getDistance());
+    }
+
+    @Override
+    public void end(boolean interrupted) {
+        chassis.setVelocity(0, 0);
+    }
+
+    @Override
+    public boolean isFinished() {
+        return remainingDistance < 0.02;
+    }
+
 }

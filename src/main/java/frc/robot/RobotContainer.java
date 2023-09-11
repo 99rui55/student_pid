@@ -18,7 +18,7 @@ public class RobotContainer {
     chassis = new Chassis();
     configureBindings();
     pid = new VelocityPIDCommand(chassis);
-    udi = new udi(chassis, 2, 0.2, 0.05);
+    udi = new udi(2,0.2,0.05,chassis);
   }
 
   private void configureBindings() {
