@@ -23,17 +23,17 @@ public class Trapezoid {
         double distancePassed = startPos.getDistance(currentPosition);
         double distanceLeft = distance - distancePassed;
         double accelDistance = acceleration*2 / Math.pow(maxVelocity, 2);
-        if (currentVelocity >= maxVelocity && distanceLeft <= accelDistance) {
+        if (distanceLeft <= accelDistance) {
             // deccelerate
             desiredVelocity -= acceleration;
         }
-        else if (distanceLeft > accelDistance && currentVelocity < maxVelocity) {
-            // keep velocity
-            desiredVelocity = maxVelocity;
-        }
-        else {
+        else if (currentVelocity < maxVelocity) {
             // accelerate
             desiredVelocity += acceleration;
+        }
+        else {
+            // keep velocity
+            desiredVelocity = maxVelocity;
         }
     }
     
