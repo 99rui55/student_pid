@@ -12,7 +12,7 @@ import frc.robot.subsystems.Chassis;
 
 public class MoveAndStay extends CommandBase{
   private Chassis chassis;
-  public Trapezoid trap;
+  private Trapezoid trap;
   private double targetDis;
   public MoveAndStay(Chassis chassis, double targetDis){
     addRequirements(chassis);
@@ -24,7 +24,7 @@ public class MoveAndStay extends CommandBase{
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    //chassis.resetV();
+    chassis.resetV();
     targetDis += chassis.getDis();
     double maxV = SmartDashboard.getNumber("Max Velocity", 0.5);
     double maxA = SmartDashboard.getNumber("Max Acceleration", 1);
@@ -38,13 +38,11 @@ public class MoveAndStay extends CommandBase{
   @Override
   public void execute() {
     double remainingDis = this.targetDis - chassis.getDis();
-    double vr = trap.calculate(remainingDis, chassis.getVelocity(), 0);
-    double vl = trap.calculate(remainingDis, chassis.getVelocity(), 0);
-    chassis.setV(vl, vr);
-    System.out.println("velocityL= " + vl);
+    double v = trap.calculate(remainingDis, chassis.getVelocity(), 0);
+    chassis.setV(v, v);
+    System.out.println("velocity= " + v);
     System.out.println("velocityL= " + chassis.getVelocityL());
     System.out.println("__________________________________");
-    System.out.println("velocityR= " + vr);
     System.out.println("velocityR= " + chassis.getVelocityR());
     System.out.println("__________________________________");
     System.out.println("velocity= " + chassis.getVelocity());

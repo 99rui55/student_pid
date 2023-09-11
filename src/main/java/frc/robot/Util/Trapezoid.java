@@ -10,7 +10,6 @@ import frc.robot.Constants;
 public class Trapezoid {
     private double maxV;
     private double maxA;
-
     public Trapezoid(double maxV, double maxA) {
         this.maxA = maxA;
         this.maxV = maxV;
@@ -25,10 +24,13 @@ public class Trapezoid {
             return this.maxV;
         } else if (currentV > endV) {
             System.out.println("true3--------");
-            System.out.println(this.maxA * Constants.cycleTime);
-            System.out.println(currentV - this.maxA * Constants.cycleTime);
-            //return 0;
-            return Math.max(currentV - this.maxA * Constants.cycleTime, endV);
+            System.out.println(this.maxA * Constants.cycleTime + " " + currentV + " " +(currentV - this.maxA * Constants.cycleTime) );
+            //return 0;            System.out.println(currentV - this.maxA * Constants.cycleTime);
+            double help = currentV;
+            if(currentV > this.maxV){
+                help = this.maxV;
+            }
+            return Math.max(help - this.maxA * Constants.cycleTime, endV);
         }
         System.out.println("true4--------");
         return endV;

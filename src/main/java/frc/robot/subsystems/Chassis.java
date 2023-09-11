@@ -83,11 +83,13 @@ public class Chassis extends SubsystemBase {
     double v1 = (vl*Constants.pulsePerMeter)/10;
     double v2 = (vr*Constants.pulsePerMeter)/10;
     DifferentialDriveWheelVoltages volt = gg2.calculate(getVelocityL(), vl, getVelocityR(), vr, Constants.cycleTime);
+    double pr = (Constants.ks*Math.signum(v2) + volt.right)/12;
+    double pl = (Constants.ks*Math.signum(v1) + volt.left)/12;
     System.out.println("_______ _________ _________ _________");
-    System.out.println("Volts = " + volt.right+"  "+volt.left);
+    System.out.println("Volts = " + pr+"  "+pl);
     System.out.println("_______ _________ _________ _________");
-    rightBkTalonFX.set(ControlMode.Velocity,v2 , DemandType.ArbitraryFeedForward, (Constants.ks*Math.signum(v2) + volt.right)/12);
-    leftBkTalonFX.set(ControlMode.Velocity,v1 , DemandType.ArbitraryFeedForward, (Constants.ks*Math.signum(v1) + volt.left)/12);
+    rightBkTalonFX.set(ControlMode.Velocity,v2 , DemandType.ArbitraryFeedForward, pr);
+    leftBkTalonFX.set(ControlMode.Velocity,v1 , DemandType.ArbitraryFeedForward, pl);
   }
   public void setV(double v){
     double v1 = (v*Constants.pulsePerMeter)/10;
