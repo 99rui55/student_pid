@@ -35,29 +35,31 @@ public class speedCtrl {
         //Acceleration and the next velocity are in Meters per cycle time, not seconds.
         double acc = Math.signum(tgtVel - cVel) * this.maxAcc * OperatorConstants.cTime;
         double nextV = cVel * OperatorConstants.cTime + acc;
-
-        if(rD - accDC(nextV / OperatorConstants.cTime, tgtVel) > accD(nextV / OperatorConstants.cTime, tgtVel))
+        
+        if(rD - accDC(nextV / OperatorConstants.cTime, endVel) > accD(nextV / OperatorConstants.cTime, endVel) && cVel < tgtVel)
         {
-            if(Math.abs(tgtVel - nextV / OperatorConstants.cTime) > this.maxAcc){
-                System.out.println("Acc to Target Speed");
-                return nextV;
-            }
-            else{
-                System.out.println("Keep Target Speed");
-                return tgtVel * OperatorConstants.cTime;
-            }
+            System.out.println("\nAcc");
+            return Math.min(nextV, this.maxVel * OperatorConstants.cTime);
         }
+        
         else{
             acc = Math.signum(endVel - cVel) * this.maxAcc * OperatorConstants.cTime;
             nextV = cVel * OperatorConstants.cTime + acc;
-            if(Math.abs(endVel - nextV / OperatorConstants.cTime) > this.maxAcc)
+            if(rD - accDC(cVel, endVel) <= accD(cVel, endVel) && cVel + acc / OperatorConstants.cTime > 0)
             {
-                System.out.println("Acc to End Speed");
+                System.out.println("\nSlow");
                 return nextV;
             }
             else{
-                System.out.println("Keep End Speed");
-                return endVel * OperatorConstants.cTime;
+                if(rD - cVel * OperatorConstants.cTime /*/ 2*/ >= 0){
+                System.out.println("\nKeep");
+                return cVel * OperatorConstants.cTime;
+                }
+                else
+                {
+                    System.out.println("\nShut : " + (rD - cVel * OperatorConstants.cTime));
+                    return endVel;
+                }
             }
         }
     }

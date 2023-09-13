@@ -12,6 +12,7 @@ import edu.wpi.first.util.sendable.SendableBuilder;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.DemandType;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
+import com.ctre.phoenix.motorcontrol.TalonFXControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -32,7 +33,7 @@ public class Chasis extends SubsystemBase {
   public Chasis(int... id) {
     super();
 
-    this.ddff = new DifferentialDriveFeedforward(OperatorConstants.kV, OperatorConstants.kA, OperatorConstants.kVA,OperatorConstants.kAA);
+    this.ddff = new DifferentialDriveFeedforward(OperatorConstants.kV, OperatorConstants.kA, OperatorConstants.kVA,OperatorConstants.kAA,OperatorConstants.bWheels);
 
     motors = new TalonFX[id.length];
     for (int i = 0; i < motors.length; i++) {
@@ -156,17 +157,19 @@ public class Chasis extends SubsystemBase {
     // motors[Constants.OperatorConstants.rightSide].set(ControlMode.Velocity,
     //     (mPs * Constants.OperatorConstants.cPerM) / 10);
     DifferentialDriveWheelVoltages volt =  ddff.calculate(
-    this.getSpeedL(),
-     mPs,
     this.getSpeedR(),
+     mPs,
+    this.getSpeedL(),
      mPs,
      OperatorConstants.cTime);
     
-    double pLeft = (volt.left + OperatorConstants.kS*Math.signum(mPs))/OperatorConstants.maxVolt;
-    double pRight = (volt.right + OperatorConstants.kS*Math.signum(mPs))/OperatorConstants.maxVolt;
+    double ffLeft = volt.left + OperatorConstants.kS*Math.signum(mPs);
+    double ffRight = volt.right + OperatorConstants.kS*Math.signum(mPs);
 
-    motors[OperatorConstants.leftSide].set(ControlMode.PercentOutput,pLeft);
-    motors[OperatorConstants.rightSide].set(ControlMode.PercentOutput,pRight);
+    System.out.println("FFright(precent) : " + (ffRight / OperatorConstants.maxVolt));
+    System.out.println("FFleft(precent) : " + (ffLeft / OperatorConstants.maxVolt));
+    motors[OperatorConstants.leftSide].set(TalonFXControlMode.Velocity, /*(mPs*OperatorConstants.cPerM)/1*/0, DemandType.ArbitraryFeedForward, ffLeft / OperatorConstants.maxVolt);
+    motors[OperatorConstants.rightSide].set(TalonFXControlMode.Velocity,/*(mPs*OperatorConstants.cPerM)/1*/0, DemandType.ArbitraryFeedForward, ffRight / OperatorConstants.maxVolt);
 
     
 
@@ -253,12 +256,20 @@ public class Chasis extends SubsystemBase {
 
   }
 
+  /**
+   * 
+   * @return Returns the left side's speed in Meters Per Second
+   */
   public double getSpeedL() {
-    return (this.getCountsV(OperatorConstants.leftSide) * 10) / Constants.OperatorConstants.cPerM;
+    return this.getCountsV(OperatorConstants.leftSide) / Constants.OperatorConstants.cPerM * 10;
   }
 
+  /**
+   * 
+   * @return Returns the right side's speed in Meters Per Second
+   */
   public double getSpeedR() {
-    return (this.getCountsV(OperatorConstants.rightSide) * 10) / Constants.OperatorConstants.cPerM;
+    return this.getCountsV(OperatorConstants.rightSide) / Constants.OperatorConstants.cPerM * 10;
   }
   public double getSpeedAvg() {
     return (getSpeedL() + getSpeedR())/2;

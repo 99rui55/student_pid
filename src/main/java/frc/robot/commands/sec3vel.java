@@ -13,7 +13,7 @@ public class sec3vel extends CommandBase {
   /** Creates a new sec3vel. */
   Chasis chasis;
   double speed;
-  double reqSpeed = 0.1;
+  double reqSpeed = 1;
   int time = 0;
 
   public sec3vel(Chasis chasis) {

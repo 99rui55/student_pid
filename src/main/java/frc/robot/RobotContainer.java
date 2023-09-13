@@ -81,7 +81,7 @@ public class RobotContainer {
             new InstantCommand(()->chasis.printVelocity(),chasis),
             new InstantCommand(()->chasis.setP(0),chasis));
 
-     return cmd; // this.s3v;
+     return this.s3v; // this.s3v;
     //return null;
   }
 }

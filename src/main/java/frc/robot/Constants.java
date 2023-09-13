@@ -18,11 +18,13 @@ public final class Constants {
     public static final int kDriverControllerPort = 0;
     public static final double wheelCirc = 6*0.0254*Math.PI;
     public static final double GearRatio = 12;
+    public static final double bWheels = 0.58;
     public static final double CountsPerRevolution = 2048;
     public static final double cPerM = (1/wheelCirc)*GearRatio*CountsPerRevolution; //161684.21;
     //public static final double kP = 0.01;
     //public static final double kP = 0.002;
-    public static final double kP = 0.0;
+    public static final double kP =  (0.417*1023)/(12*(OperatorConstants.cPerM / 10));
+    // public static final double e = 0.417*1023/(12*5133);
 
     //public static final double kI = 0.0015;
     //public static final double kI = 0.0008;
@@ -37,19 +39,21 @@ public final class Constants {
 
     //public static final double kS = 0.00611;
 
+    public static final double vPerMPS = 0.417;
     //kS, kV, kA, kAA, kVA are in volts
-    public static final double kS = 0.3;
+    public static final double kS = 0.3 * vPerMPS;
 
-    public static final double kV = 2.84;
-    public static final double kA = 0.12;
+    public static final double kV = 2.84 * vPerMPS;
+    public static final double kA = 0.12 * vPerMPS;
 
-    public static final double kVA = 2.85;
-    public static final double kAA = 0.055;
+    public static final double kVA = 2.85 * vPerMPS;
+    public static final double kAA = 0.055 * vPerMPS;
 
     public static final double cTime = 0.02;
 
     //For str8D
     public static final double kPAE = 0.05;
 
+    
   }
 }
