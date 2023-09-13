@@ -40,7 +40,7 @@ public final class Constants {
     public static final double VelocityKD = 0;//VelocityKI/10;
 
     // FF
-    public static final double Ks = 0.3;
+    public static final double Ks = 0.35;
     public static final double Kv = 2.84;
     public static final double Ka = 0.12;
     public static final double Kp = 0.006975;
