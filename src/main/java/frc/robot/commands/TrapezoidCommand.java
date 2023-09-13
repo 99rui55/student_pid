@@ -16,7 +16,7 @@ public class TrapezoidCommand extends CommandBase {
   Chassis chassis;
   Trapezoid trapezoid;
   double distence;
-  double remainingDis;
+  double remainingDis = 0;
   double vel;
   double endVel = 0;
   double maxVel;
