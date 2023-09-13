@@ -16,6 +16,7 @@ public class MoveSimple extends CommandBase {
 
     @Override
     public void initialize() {
+        System.out.println("setting velocity to " + velocity);
         chassis.setVelocity(velocity);
     }
 
