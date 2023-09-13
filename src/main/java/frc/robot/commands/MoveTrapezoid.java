@@ -8,7 +8,7 @@ import static frc.robot.Constants.ChassisConstants.*;
 
 public class MoveTrapezoid extends CommandBase {
     Chassis chassis;
-    Trapezoid trapezoid = new Trapezoid(1, 0.35, 4, 0);
+    Trapezoid trapezoid = new Trapezoid(1, 0.35, 8, 0);
     double remainingDistance = 4;
     double distanceTraveled = 0;
     

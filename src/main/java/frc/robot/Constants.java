@@ -25,9 +25,14 @@ public final class Constants {
     public static final boolean LeftInvert = true;
     public static final boolean RightInvert = false;
 
+    // public static final double Kv = 2.84/12;
+    // public static final double Ks = 0.12/12;
+    // public static final double Ka = 0.3/12;
+
     public static final double Kv = 2.84/12;
-    public static final double Ks = 0.12/12;
+    public static final double Ks = 0.5;
     public static final double Ka = 0.3/12;
+
     public static final double Kva = 2.85/12;
     public static final double Kaa = 0.055/12;
     public static final double wheelWidth = 0.58; // Meters
