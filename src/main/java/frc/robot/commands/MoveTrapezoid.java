@@ -33,6 +33,7 @@ public class MoveTrapezoid extends CommandBase {
         chassis.setVelocity(trapezoid.calculate(remainingDistance, chassis.getVelocity(), 0));
         distanceTraveled = chassis.getDistance() - originalPos;
         remainingDistance -= distanceTraveled;
+        // System.out.println("traveled " + distanceTraveled + " in this cycle");
     }
 
     @Override
