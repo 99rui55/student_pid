@@ -17,6 +17,7 @@ import javax.swing.JComboBox.KeySelectionManager;
  */
 public final class Constants {
   public static class ChassisConstants {
+    public static double voltsPerMeter = 0.417;
     public static final int FrontLeftMotor = 1;
     public static final int BackLeftMotor = 2;
     public static final int FrontRightMotor = 3;
@@ -29,12 +30,13 @@ public final class Constants {
     // public static final double Ks = 0.12/12;
     // public static final double Ka = 0.3/12;
 
-    public static final double Kv = 2.84/12;
-    public static final double Ks = 0.5;
-    public static final double Ka = 0.3/12;
+    public static final double Kp = (0.417 * 1023) / (12 * CountPerMeter);
+    public static final double Kv = 2.84 * voltsPerMeter;
+    public static final double Ka = 0.12 * voltsPerMeter;
+    public static final double Ks = 0.335 * voltsPerMeter;
 
-    public static final double Kva = 2.85/12;
-    public static final double Kaa = 0.055/12;
+    public static final double Kva = 2.85 * voltsPerMeter;
+    public static final double Kaa = 0.055 * voltsPerMeter;
     public static final double wheelWidth = 0.58; // Meters
     public static final double circleTime = 0.02; // Seconds
     
