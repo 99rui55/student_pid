@@ -19,7 +19,7 @@ public class udi extends CommandBase{
         super();
         this.chassis = chassis;
         this.distance = distance;
-        direction = Math.signum(distance);
+        direction  = Math.signum(distance);
         Trapez = new Trapez(velocity, maxAcceleration);
         addRequirements(chassis);
     }
