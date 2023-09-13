@@ -4,22 +4,15 @@ package frc.robot;
 public class Trapez {
     double maxVelocity;
     double maxAcceleration;
-    private double accelDist;
+    private double ccelerationDistance;
     private double deltaV;
 
     public Trapez(double maxVelocity, double maxAcceleration) {
         this.maxAcceleration = maxAcceleration;
         this.maxVelocity = maxVelocity;
         deltaV = maxAcceleration * 0.02;
-        accelDist = maxAcceleration * 0.0002;
+        ccelerationDistance = maxAcceleration * 0.0002;
 
-    }
-
-    private double cycleDistanceWithAccel(double currentVelocity) {
-        return currentVelocity * 0.02 + accelDist;
-    }
-    private double cycleDistanceNoAccel(double currentVelocity) {
-        return currentVelocity * 0.02;
     }
 
     private double distanceToVel(double currentVel, double tgtVel, double accel) {
@@ -41,6 +34,15 @@ public class Trapez {
         }
         
     }
+    
+    private double cycleDistanceNoAccel(double currentVelocity) {
+        return currentVelocity * 0.02;
+    }
+    private double cycleDistanceWithAccel(double currentVelocity) {
+        return currentVelocity * 0.02 + ccelerationDistance;
+    }
+
+    
 
     
     
