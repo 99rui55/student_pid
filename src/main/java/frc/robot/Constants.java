@@ -30,7 +30,7 @@ public final class Constants {
     // public static final double Ks = 0.12/12;
     // public static final double Ka = 0.3/12;
 
-    public static final double Kp = (0.417 * 1023) / (12 * CountPerMeter);
+    public static final double kP = (0.417 * 1023) / (12 * CountPerMeter);
     public static final double Kv = 2.84 * voltsPerMeter;
     public static final double Ka = 0.12 * voltsPerMeter;
     public static final double Ks = 0.335 * voltsPerMeter;
@@ -48,7 +48,7 @@ public final class Constants {
     public static final double PulsePerRotation = 2048;
     public static final double PulsePerMeter = (1/WheelCirc)*GearRatio*PulsePerRotation;
 
-    public static final double kP = 0.03;
+    // public static final double kP = 0.03;
     public static final double kI = 0;
     public static final double kD = 0;
 
