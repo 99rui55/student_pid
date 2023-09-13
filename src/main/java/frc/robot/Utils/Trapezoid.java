@@ -40,7 +40,12 @@ public class Trapezoid {
             // when the distence is already at the third phase at the decreasing velocity phase
             // return the decreased velocity or the end velocity if we closer to that
             state = "phase 3 - deceleration";
-            return Math.max(currentVel - maxAcc * Constants.cycleTime, endVel);
+            double help = currentVel;
+            if (currentVel > maxVel){
+                help = maxVel;
+            }
+            return Math.max(help - maxAcc * Constants.cycleTime, endVel);
+            
 
         } else{
             // when we at the end of the trapezoid we only use the end velocity so we
