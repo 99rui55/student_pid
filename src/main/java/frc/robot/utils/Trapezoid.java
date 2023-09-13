@@ -10,14 +10,20 @@ public class Trapezoid {
     }
 
     public double calculate(double remainingDistance, double currentV, double endV){
-        if(remainingDistance > neededDistToGetToV(nextCycleV(currentV), endV))
+        if(remainingDistance > neededDistToGetToV(nextCycleV(currentV), endV)){
+            System.out.println("accelerating");
+            System.out.println("next speed: " + Math.min(currentV + maxA*cycleTime, maxV));
             return Math.min(currentV + maxA*cycleTime, maxV);
-        else if(remainingDistance <= neededDistToGetToV(currentV, endV))
+        }
+        else if(remainingDistance <= neededDistToGetToV(currentV, endV)){
+            System.out.println("preserving speed");
             return currentV;
-        else
+        }
+        else{
+            System.out.println("slowing down");
             return currentV - maxA*cycleTime;
+        }
     }
-    
     public double nextCycleV(double currentV){
         return currentV + maxA * cycleTime;
     }

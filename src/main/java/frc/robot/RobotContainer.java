@@ -6,6 +6,7 @@ package frc.robot;
 
 import frc.robot.commands.ExampleCommand;
 import frc.robot.commands.KeepVelocityPID;
+import frc.robot.commands.TrapezoidDrive;
 import frc.robot.subsystems.ChassisSubsystem;
 import frc.robot.subsystems.ExampleSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -29,11 +30,11 @@ public class RobotContainer {
 
   private ChassisSubsystem chassis; 
 
-  private Command keepVelocityPID;
+  // private Command keepVelocityPID;
   
   public RobotContainer() {
     chassis = new ChassisSubsystem(this);
-    keepVelocityPID = new KeepVelocityPID(chassis).withTimeout(3);
+    // keepVelocityPID = new KeepVelocityPID(chassis).withTimeout(3);
     // Configure the trigger bindings
     configureBindings();
   }
@@ -63,6 +64,6 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     // An example command will be run in autonomous
-    return keepVelocityPID;
+    return new TrapezoidDrive(chassis);
   }
 }
