@@ -18,6 +18,8 @@ public class Chassis extends SubsystemBase {
 
     TalonFX left;
     TalonFX right;
+    public double maxAcc = SmartDashboard.getNumber("Max Acceleration", 1);
+    public double maxVel = SmartDashboard.getNumber("Max Velocity", 0.5);
 
     public TalonFX motorLF = new TalonFX(Constants.LeftFrontMotor);
     public TalonFX motorLB = new TalonFX(Constants.LeftBackMotor);
@@ -33,7 +35,7 @@ public class Chassis extends SubsystemBase {
     
         SmartDashboard.putData(this);
     }
-
+    
     private TalonFX initMotors(int mainMotor, int followerMotor, boolean invert) {
         TalonFX main = new TalonFX(mainMotor);
         TalonFX follower = new TalonFX(followerMotor);
@@ -109,6 +111,7 @@ public class Chassis extends SubsystemBase {
         motorRF.setNeutralMode(NeutralMode.Coast);
         motorRB.setNeutralMode(NeutralMode.Coast);
     }
+    
 
     @Override
     public void initSendable(SendableBuilder builder) {

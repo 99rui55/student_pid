@@ -12,7 +12,7 @@ public class Trapezoid {
     public double maxAcc;
     public double neededDis;
     public double time;
-    public String state;
+    public String state = "prepare for trapezoid / error";
 
     public Trapezoid(double maxVel, double maxAcc){
         this.maxVel = maxVel;

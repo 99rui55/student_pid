@@ -27,6 +27,8 @@ public class TrapezoidCommand extends CommandBase {
     // Use addRequirements() here to declare subsystem dependencies.
     this.chassis = chassis;
     this.distence = distence * Constants.PulsePerMeter;
+    this.maxAcc = chassis.maxAcc;
+    this.maxVel = chassis.maxVel;
     addRequirements(chassis);
   }
   
@@ -36,10 +38,9 @@ public class TrapezoidCommand extends CommandBase {
     // for future use: 
     // endVel = SmartDashboard.getNumber("endVel", 0); 
     endVel = 0;
-    
+    this.maxAcc = chassis.maxAcc;
+    this.maxVel = chassis.maxVel;
     // set up the var
-    maxVel = SmartDashboard.getNumber("Max Velocity", 0.5);
-    maxAcc = SmartDashboard.getNumber("Max Acceleration", 1);
     distence += chassis.getDistance();
     trapezoid = new Trapezoid(maxVel, maxAcc);
     SmartDashboard.putData(this);
