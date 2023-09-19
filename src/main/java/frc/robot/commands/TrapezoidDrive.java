@@ -9,25 +9,23 @@ public class TrapezoidDrive extends CommandBase{
     private ChassisSubsystem chassis;
     private Trapezoid trapezoid;
     private double remainingDistance;
-    private double startDistance;
+    private double targetDistance;
     public TrapezoidDrive(ChassisSubsystem chassis){
         this.chassis = chassis;
-        this.trapezoid = new Trapezoid(1, 0.5);
+        this.trapezoid = new Trapezoid(1, 1);
         addRequirements(chassis);
     }
 
     @Override
     public void initialize() {
-        remainingDistance = SmartDashboard.getNumber("Desired distance", 0);
-        startDistance = chassis.getDistance();
-        System.out.println("starting distance: " + startDistance);
+        targetDistance = chassis.getDistance() + SmartDashboard.getNumber("Desired distance", 0);
     }
     
     @Override
     public void execute() {
+        remainingDistance = targetDistance - chassis.getDistance();;
         System.out.println("speed: " + trapezoid.calculate(remainingDistance, chassis.getVelocity(), 0));
         chassis.setVelocity(trapezoid.calculate(remainingDistance, chassis.getVelocity(), 0));
-        remainingDistance -= startDistance - chassis.getDistance();
         System.out.println("remaining distance: " + remainingDistance);
     }
 

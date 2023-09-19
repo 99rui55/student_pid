@@ -45,7 +45,7 @@ public final class Constants {
     public static final double Ka = 0.12;
     public static final double Kp = 0.006975;
     public static final double Kva = 2.85;
-    public static final double Kaa = 0.55;
+    public static final double Kaa = 0.055;
     public static final double TW = 0.58;
     
   public static class OperatorConstants {

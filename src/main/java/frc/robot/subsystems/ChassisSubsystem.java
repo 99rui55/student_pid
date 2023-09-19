@@ -84,6 +84,10 @@ public class ChassisSubsystem extends SubsystemBase{
                 SmartDashboard.getNumber("Velocity KD", VelocityKD));
     }
 
+    public void setDistance0(){
+        leftMotors.setSelectedSensorPosition(0);
+        rightMotors.setSelectedSensorPosition(0);
+    }
     //getters
     public double getLeftDistance() {
         return leftMotors.getSelectedSensorPosition()/PulsePerMeter;
