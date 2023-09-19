@@ -1,9 +1,0 @@
-[
-  {
-    "type": "java",
-    "name": "frcJava",
-    "port": 8349,
-    "target": "10.56.35.2",
-    "project": "student_pid_Omer"
-  }
-]
