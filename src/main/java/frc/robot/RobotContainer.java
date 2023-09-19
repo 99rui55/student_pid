@@ -5,7 +5,6 @@
 package frc.robot;
 
 import frc.robot.commands.ExampleCommand;
-import frc.robot.commands.KeepVelocityPID;
 import frc.robot.commands.TrapezoidDrive;
 import frc.robot.subsystems.ChassisSubsystem;
 import frc.robot.subsystems.ExampleSubsystem;
