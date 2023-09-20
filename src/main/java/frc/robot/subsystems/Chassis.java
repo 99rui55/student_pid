@@ -41,6 +41,11 @@ public class Chassis extends SubsystemBase{
         pose = new Pose2d(0,0,getGyroAngle());
         SmartDashboard.putData(this);
 
+
+
+
+
+
     }
     public void setPower(double power) {
         leftfront.set(ControlMode.PercentOutput, power);
@@ -81,6 +86,8 @@ public class Chassis extends SubsystemBase{
         SmartDashboard.putNumber("Velocity KD", Constants.VelocityKD);
         SmartDashboard.putNumber("Velocity KD", Constants.VelocityKD);
         SmartDashboard.putNumber("Wanted Velocity", Constants.wantedvelosity);
+        
+
       
     }
     public static double TalonVelocityToVelocity(double v) {
