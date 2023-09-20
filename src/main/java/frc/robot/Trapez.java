@@ -4,33 +4,31 @@ package frc.robot;
 public class Trapez {
     double maxVelocity;
     double maxAcceleration;
-    private double ccelerationDistance;
-    private double deltaV;
+    private double deltaVelocity;
 
     public Trapez(double maxVelocity, double maxAcceleration) {
         this.maxAcceleration = maxAcceleration;
         this.maxVelocity = maxVelocity;
-        deltaV = maxAcceleration * 0.02;
-        ccelerationDistance = maxAcceleration * 0.0002;
+        deltaVelocity = maxAcceleration * 0.02;
 
     }
 
-    private double distanceToVel(double currentVel, double tgtVel, double accel) {
-        double deltaVel = currentVel - tgtVel;
-        return (currentVel - deltaVel/2)*deltaVel/accel;
+    private double distanceToVelocity(double currentVelocity, double targetVelocity, double acceleration) {
+        double deltaVelocity = currentVelocity - targetVelocity;
+        return (currentVelocity - deltaVelocity/2)*deltaVelocity/acceleration;
     }
 
-    public double calculate(double remainingDistance, double curentVelocity, double tgtVelocity) {
+    public double calculate(double remainingDistance, double curentVelocity, double targetVelocity) {
         if(remainingDistance < 0) {
-            return  -1*calculate(-1*remainingDistance, -1*curentVelocity, -1*tgtVelocity);
+            return  -1*calculate(-1*remainingDistance, -1*curentVelocity, -1*targetVelocity);
         }
-        if(curentVelocity < maxVelocity && distanceToVel(curentVelocity+deltaV, tgtVelocity, maxAcceleration) < remainingDistance - cycleDistanceWithAccel(curentVelocity)) {
-            return Math.min(curentVelocity + deltaV, maxVelocity);
+        if(curentVelocity < maxVelocity && distanceToVelocity(curentVelocity+deltaVelocity, targetVelocity, maxAcceleration) < remainingDistance - cycleDistanceWithAccel(curentVelocity)) {
+            return Math.min(curentVelocity + deltaVelocity, maxVelocity);
 
-        } else if(distanceToVel(curentVelocity, tgtVelocity, maxAcceleration) < remainingDistance - cycleDistanceNoAccel(curentVelocity)) {
+        } else if(distanceToVelocity(curentVelocity, targetVelocity, maxAcceleration) < remainingDistance - cycleDistanceNoAccel(curentVelocity)) {
             return curentVelocity;
         } else {
-            return Math.max(curentVelocity - deltaV,tgtVelocity);
+            return Math.max(curentVelocity - deltaVelocity,targetVelocity);
         }
         
     }
@@ -39,7 +37,7 @@ public class Trapez {
         return currentVelocity * 0.02;
     }
     private double cycleDistanceWithAccel(double currentVelocity) {
-        return currentVelocity * 0.02 + ccelerationDistance;
+        return currentVelocity * 0.02 + (maxAcceleration * 0.0002);
     }
 
     
