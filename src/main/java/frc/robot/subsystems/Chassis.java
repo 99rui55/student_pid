@@ -125,10 +125,7 @@ public class Chassis extends SubsystemBase {
     return Math.abs((leftBkTalonFX.getSelectedSensorPosition()+leftFrTalonFX.getSelectedSensorPosition())/2);
   }
   public double getDis(){
-    double pulsePerRotation = 2048;
-    double gear = 12;
-    double spinPerMeter = 1/(0.15*Math.PI);
-    return getRightPulses()/pulsePerRotation/gear/spinPerMeter;
+    return getRightPulses()/Constants.pulsePerMeter;
   }
 
   public double getRightMeters(){

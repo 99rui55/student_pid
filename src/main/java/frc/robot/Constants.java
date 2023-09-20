@@ -30,7 +30,7 @@ public final class Constants {
 
   public static final double kv = 2.84;
   public static final double ka = 0.12;
-  public static final double ks = 0.5;
+  public static final double ks = 0.35;
   public static final double kva = 2.85;
   public static final double kaa = 0.055;
   

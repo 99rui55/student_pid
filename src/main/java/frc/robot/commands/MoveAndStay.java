@@ -24,8 +24,9 @@ public class MoveAndStay extends CommandBase{
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    chassis.resetV();
-    targetDis += chassis.getDis();
+    //chassis.resetV();
+    double startDis = chassis.getDis();
+    targetDis += startDis;
     double maxV = SmartDashboard.getNumber("Max Velocity", 0.5);
     double maxA = SmartDashboard.getNumber("Max Acceleration", 1);
     trap = new Trapezoid(maxV, maxA);
@@ -37,7 +38,7 @@ public class MoveAndStay extends CommandBase{
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    double remainingDis = this.targetDis - chassis.getDis();
+    double remainingDis = targetDis - chassis.getDis();
     double v = trap.calculate(remainingDis, chassis.getVelocity(), 0);
     chassis.setV(v, v);
     System.out.println("velocity= " + v);
