@@ -9,11 +9,9 @@ public class udi extends CommandBase{
     Trapez Trapez;
     private double distance;
     private double direction;
-    private double heading;
     private double startDistance;
     private double remainingDistance;
 
-    private final double headingKP = 0.1;
 
     public udi(double distance, double velocity, double maxAcceleration, Chassis chassis) {
         super();
@@ -26,18 +24,14 @@ public class udi extends CommandBase{
 
     @Override
     public void initialize() {
-        heading = chassis.getrotation();
         startDistance = chassis.getDistance();
     }
 
     @Override
     public void execute() {
-        double curentVelocity = chassis.getVelocity();
-        double headingError = chassis.getrotation() - heading;
         remainingDistance = remainingDistance();
-        double tgtVel = Trapez.calculate(remainingDistance, curentVelocity, 0) * direction;
-        chassis.setVelocity(tgtVel + headingError * headingKP, tgtVel - headingError * headingKP);
-        System.out.println("wwww");
+        double v = Trapez.calculate(remainingDistance, chassis.getVelocity(), 0);
+        chassis.setVelocity(v, v);
     }
 
     private double remainingDistance() {
@@ -46,7 +40,6 @@ public class udi extends CommandBase{
 
     @Override
     public void end(boolean interrupted) {
-        System.out.println("rrrrrrrr");
         chassis.setVelocity(0, 0);
     }
 
