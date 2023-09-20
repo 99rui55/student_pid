@@ -5,6 +5,11 @@ import com.ctre.phoenix.motorcontrol.DemandType;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import com.ctre.phoenix.sensors.PigeonIMU;
 
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
+import edu.wpi.first.math.kinematics.DifferentialDriveWheelSpeeds;
 import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -17,6 +22,8 @@ public class Chassis extends SubsystemBase{
     TalonFX rightfront;
     TalonFX rightback;
     PigeonIMU gyro;
+    Pose2d pose;
+    DifferentialDriveKinematics kinematics;
     public Chassis() {
       super();
         leftfront = new TalonFX(Constants.LeftFrontMotor);
@@ -31,6 +38,7 @@ public class Chassis extends SubsystemBase{
         rightfront.setInverted(false);
         gyro = new PigeonIMU(Constants.gyro);
         setPID();
+        pose = new Pose2d(0,0,getGyroAngle());
         SmartDashboard.putData(this);
 
     }
@@ -80,5 +88,25 @@ public class Chassis extends SubsystemBase{
     }
     public static double VelocityToTalonVelocity(double v) {
         return v * Constants.PulsePerMeter / 10;
+    }
+    public Rotation2d getGyroAngle() {
+        return Rotation2d.fromDegrees(gyro.getFusedHeading());
+    }
+    public double heading() {
+        return pose.getRotation().getDegrees();
+    }
+    public Pose2d getPose() {
+        return pose;
+    }
+    public double getRotationRate() {
+        double[] rates = new double[3]; // x,y,z rates
+        gyro.getRawGyro(rates);
+        return rates[2]; // z
+    }
+    public void setVelocity(DifferentialDriveWheelSpeeds speeds) {
+        setVelocity(speeds.leftMetersPerSecond,speeds.rightMetersPerSecond);
+    }
+    public void setVelocity(ChassisSpeeds speed) {
+        setVelocity(kinematics.toWheelSpeeds(speed));
     }
 }

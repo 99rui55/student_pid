@@ -28,7 +28,7 @@ public class Trapez {
         } else if(distanceToVelocity(curentVelocity, targetVelocity, maxAcceleration) < remainingDistance - cycleDistanceNoAccel(curentVelocity)) {
             return curentVelocity;
         } else {
-            return Math.max(curentVelocity - deltaVelocity,targetVelocity);
+            return Math.max(curentVelocity - deltaVelocity,0);
         }
         
     }
